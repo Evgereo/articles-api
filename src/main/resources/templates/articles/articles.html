@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body{
+            background: burlywood;
+        }
+        .articles_container{
+            text-align: center;
+            margin: 30px auto;
+        }
+        .article{
+            margin: 10px auto;
+            border: 1px solid darkmagenta;
+        }
+        .article_title{
+            font-size: 24px;
+            font-family: Arial,serif;
+        }
+        .article_text{
+            font-size: 18px;
+            font-family: Arial,serif;
+        }
+        .user_link{
+            font-size: 18px;
+            font-family: Arial,serif;
+            text-decoration: none;
+        }
+    </style>
+    <title>Articles</title>
+</head>
+    <body>
+    <div class="articles_container">
+        <div th:each="article: ${articles}" class="article">
+            <p class="article_title" th:text="${article.getArticle_name()}">Article name</p>
+            <span class="article_text" th:text="${article.getArticle_text}"></span> <br>
+            <a class="user_link" th:href="@{/users/{id} (id=${article.getAuthor_id()})}" th:text="Author"></a>
+        </div>
+    </div>
+    </body>
+</html>

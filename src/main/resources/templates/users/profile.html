@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body{
+            background: burlywood;
+        }
+        .user{
+            text-align: center;
+            margin: 10px auto;
+        }
+        .user_info{
+            font-size: 20px;
+            font-family: Arial,serif;
+            color: darkmagenta;
+        }
+        .back_link{
+            vertical-align: middle;
+            font-size: 18px;
+            font-family: Arial,serif;
+            text-decoration: none;
+            color: indigo;
+        }
+        .link_container{
+            margin: 10px auto;
+            height: 25px;
+            width: 100%;
+        }
+        .button{
+            min-width: 100px;
+            font-family: Arial, serif;
+            appearance: none;
+            border: 0;
+            border-radius: 5px;
+            cursor:pointer;
+            background: burlywood;
+            padding: 8px 16px;
+            font-size: 18px;
+            color: indigo;
+        }
+        .articles_container{
+            text-align: center;
+            margin: 30px auto;
+            display: grid;
+            grid-gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+        .article{
+            border: solid indigo;
+        }
+        .article_title{
+            font-size: 24px;
+            font-family: Arial,serif;
+            color: indigo;
+        }
+        .article_text{
+            font-size: 18px;
+            font-family: Arial,serif;
+            color: indigo;
+        }
+    </style>
+    <title th:text="${user.getUser_name()} + ' ' + ${user.getUser_surname()}"/>
+</head>
+    <body>
+        <div class="user">
+            <p class="user_info" th:text="${user.getUser_name()} + ' ' + ${user.getUser_surname()}"/>
+            <p class="user_info" th:text="'Age: ' + ${user.getAge()}"/>
+            <p class="user_info" th:text="'Email: ' + ${user.getEmail()}"/>
+            <div class="link_container"><a class="back_link" th:href="'/users/' + ${user.getUser_id()} + '/edit'">Edit user!</a></div>
+            <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getUser_id()})}">
+                <div>
+                    <input class="button" type="submit" value="Delete user!">
+                </div>
+            </form>
+            <div class="link_container"><a class="back_link" th:href="@{/users}">Back to users page</a></div>
+        </div>
+        <div class="articles_container">
+            <div class="article" th:each="article: ${articles}">
+                <p class="article_title" th:text="${article.getArticle_name()}"/>
+                <p class="article_text" th:text="${article.getArticle_text()}"/>
+                <p th:text="${article.getPosting_date()}"/>
+            </div>
+        </div>
+    </body>
+</html>
