@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body{
+            background: burlywood;
+        }
+        .user{
+            text-align: center;
+            margin: 10px auto;
+        }
+        .article_info{
+            font-size: 20px;
+            font-family: Arial,serif;
+            color: darkmagenta;
+        }
+        .back_link{
+            vertical-align: middle;
+            font-size: 18px;
+            font-family: Arial,serif;
+            text-decoration: none;
+            color: indigo;
+        }
+        .link_container{
+            margin: 10px auto;
+            height: 25px;
+            width: 100%;
+        }
+    </style>
+    <title th:text="${article.getArticle_name()}"></title>
+</head>
+    <body>
+        <div class="user">
+            <p class="article_info" th:text="${article.getArticle_name()}"/>
+            <p class="article_info" th:text="${article.getArticle_text()}"/>
+            <div class="link_container">
+                <a class="back_link" th:href="'/articles/' + ${article.getArticle_id()} + '/edit'">Edit article!</a>
+                <a class="back_link" th:href="@{/articles}">Back to articles page</a>
+            </div>
+        </div>
+    </body>
+</html>

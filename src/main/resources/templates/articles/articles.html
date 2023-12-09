@@ -13,14 +13,21 @@
         .article{
             margin: 10px auto;
             border: 1px solid darkmagenta;
+            width: 400px;
         }
         .article_title{
             font-size: 24px;
             font-family: Arial,serif;
+            text-decoration: none;
+            color: indigo;
         }
         .article_text{
+            max-height: 100px;
+            margin: 10px 10px;
             font-size: 18px;
             font-family: Arial,serif;
+            overflow: hidden;
+
         }
         .user_link{
             font-size: 18px;
@@ -33,9 +40,10 @@
     <body>
     <div class="articles_container">
         <div th:each="article: ${articles}" class="article">
-            <p class="article_title" th:text="${article.getArticle_name()}">Article name</p>
-            <span class="article_text" th:text="${article.getArticle_text}"></span> <br>
-            <a class="user_link" th:href="@{/users/{id} (id=${article.getAuthor_id()})}" th:text="Author"></a>
+            <a class="article_title" th:href="@{/articles/{id} (id=${article.getArticle_id()})}" th:text="${article.getArticle_name()}">Article name</a>
+            <p class="article_text" th:text="${article.getArticle_text()}"></p>
+            <a class="user_link" th:href="@{/users/{id} (id=${article.getAuthor_id()})}">See author!</a>
+            <a class="user_link" th:href="@{/articles/{id}/edit (id=${article.getArticle_id()})}">Edit article</a>
         </div>
     </div>
     </body>
