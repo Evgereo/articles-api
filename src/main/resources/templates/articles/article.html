@@ -28,14 +28,14 @@
             width: 100%;
         }
     </style>
-    <title th:text="${article.getArticle_name()}"></title>
+    <title th:text="${article.getArticleName()}"></title>
 </head>
     <body>
         <div class="user">
-            <p class="article_info" th:text="${article.getArticle_name()}"/>
-            <p class="article_info" th:text="${article.getArticle_text()}"/>
+            <p class="article_info" th:text="${article.getArticleName()}"/>
+            <p class="article_info" th:text="${article.getArticleText()}"/>
             <div class="link_container">
-                <a class="back_link" th:href="'/articles/' + ${article.getArticle_id()} + '/edit'">Edit article!</a>
+                <a class="back_link" th:href="'/articles/' + ${article.getArticleId()} + '/edit'">Edit article!</a>
                 <a class="back_link" th:href="@{/articles}">Back to articles page</a>
             </div>
         </div>

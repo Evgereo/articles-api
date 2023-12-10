@@ -1,34 +1,35 @@
 package world.evgereo.articles.models;
 
 public class Users {
-    private int user_id;
-    private String user_name;
-    private String user_surname;
+    private int userId;
+    private String userName;
+    private String userSurname;
     private int age;
     private String email;
+    private String password;
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getUser_surname() {
-        return user_surname;
+    public String getUserSurname() {
+        return userSurname;
     }
 
-    public void setUser_surname(String user_surname) {
-        this.user_surname = user_surname;
+    public void setUserSurname(String userSurname) {
+        this.userSurname = userSurname;
     }
 
     public int getAge() {
@@ -45,5 +46,13 @@ public class Users {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -49,18 +49,18 @@
 <body>
 <div class="form_container">
     <div>
-        <p class="text_label" th:text="${user.getUser_name()} + ' ' + ${user.getUser_surname()}"></p>
-        <p class="text_label" th:text="${article.getPosting_date()}"></p>
+        <p class="text_label" th:text="${user.getUserName()} + ' ' + ${user.getUserSurname()}"></p>
+        <p class="text_label" th:text="${article.getPostingDate()}"></p>
     </div>
-    <form th:method="PATCH" th:action="@{/articles/{id}/edit(id=${article.article_id})}" th:object="${article}">
+    <form th:method="PATCH" th:action="@{/articles/{id}/edit(id=${article.getArticleId})}" th:object="${article}">
         <div>
             <label class="text_label" for="article_name">Name of article:</label> <br>
-            <input class="text_field" type="text" th:field="*{article_name}" id="article_name" maxlength="100">
+            <input class="text_field" type="text" th:field="*{articleName}" id="article_name" maxlength="100">
         </div>
         <br>
         <div>
             <label class="text_label" for="article_text">It's text:</label> <br>
-            <textarea class="text_field" th:field="*{article_text}" id="article_text"></textarea>
+            <textarea class="text_field" th:field="*{articleText}" id="article_text"></textarea>
         </div>
         <br>
         <div>

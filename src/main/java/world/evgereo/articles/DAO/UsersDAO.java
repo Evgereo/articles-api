@@ -25,13 +25,13 @@ public class UsersDAO {
     }
 
     public void postUser(Users user) {
-        jdbcTemplate.update("INSERT INTO users(user_name, user_surname, age, email) VALUES(?, ?, ?, ?)",
-                user.getUser_name(), user.getUser_surname(), user.getAge(), user.getEmail());
+        jdbcTemplate.update("INSERT INTO users(user_name, user_surname, age, email, password) VALUES(?, ?, ?, ?, ?)",
+                user.getUserName(), user.getUserSurname(), user.getAge(), user.getEmail(), user.getPassword());
     }
 
     public void patchUser(Users user, int id) {
         jdbcTemplate.update("UPDATE users SET user_name = ?, user_surname = ?, age = ?, email = ? WHERE user_id = ?",
-                user.getUser_name(), user.getUser_surname(), user.getAge(), user.getEmail(), id);
+                user.getUserName(), user.getUserSurname(), user.getAge(), user.getEmail(), id);
     }
 
     public void deleteUser(int id) {

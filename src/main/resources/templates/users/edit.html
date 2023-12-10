@@ -48,15 +48,15 @@
 </head>
 <body>
 <div class="form_container">
-    <form th:method="PATCH" th:action="@{/users/{id}/edit(id=${user.getUser_id()})}" th:object="${user}">
+    <form th:method="PATCH" th:action="@{/users/{id}/edit(id=${user.getUserId()})}" th:object="${user}">
         <div>
             <label class="text_label" for="user_name">Name:</label> <br>
-            <input class="text_field" type="text" th:field="*{user_name}" id="user_name"  maxlength="100">
+            <input class="text_field" type="text" th:field="*{userName}" id="user_name"  maxlength="100">
         </div>
         <br>
         <div>
             <label class="text_label" for="user_surname">Surname:</label> <br>
-            <input class="text_field" type="text" th:field="*{user_surname}" id="user_surname" maxlength="100">
+            <input class="text_field" type="text" th:field="*{userSurname}" id="user_surname" maxlength="100">
         </div>
         <br>
         <div>

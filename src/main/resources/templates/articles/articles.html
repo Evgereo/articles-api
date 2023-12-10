@@ -40,10 +40,10 @@
     <body>
     <div class="articles_container">
         <div th:each="article: ${articles}" class="article">
-            <a class="article_title" th:href="@{/articles/{id} (id=${article.getArticle_id()})}" th:text="${article.getArticle_name()}">Article name</a>
-            <p class="article_text" th:text="${article.getArticle_text()}"></p>
-            <a class="user_link" th:href="@{/users/{id} (id=${article.getAuthor_id()})}">See author!</a>
-            <a class="user_link" th:href="@{/articles/{id}/edit (id=${article.getArticle_id()})}">Edit article</a>
+            <a class="article_title" th:href="@{/articles/{id} (id=${article.getArticleId()})}" th:text="${article.getArticleName()}">Article name</a>
+            <p class="article_text" th:text="${article.getArticleText()}"></p>
+            <a class="user_link" th:href="@{/users/{id} (id=${article.getAuthorId()})}">See author!</a>
+            <a class="user_link" th:href="@{/articles/{id}/edit (id=${article.getArticleId()})}">Edit article</a>
         </div>
     </div>
     </body>

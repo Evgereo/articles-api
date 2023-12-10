@@ -22,12 +22,17 @@
             text-decoration: none;
             color: indigo;
         }
+        .back_img{
+            float: left;
+            display: inline-block;
+        }
         .link_container{
             margin: 10px auto;
             height: 25px;
             width: 100%;
         }
         .button{
+            display: inline-block;
             min-width: 100px;
             font-family: Arial, serif;
             appearance: none;
@@ -52,6 +57,7 @@
         .article_title{
             font-size: 24px;
             font-family: Arial,serif;
+            text-decoration: none;
             color: indigo;
         }
         .article_text{
@@ -60,26 +66,26 @@
             color: indigo;
         }
     </style>
-    <title th:text="${user.getUser_name()} + ' ' + ${user.getUser_surname()}"/>
+    <title th:text="${user.getUserName()} + ' ' + ${user.getUserSurname()}"/>
 </head>
     <body>
         <div class="user">
-            <p class="user_info" th:text="${user.getUser_name()} + ' ' + ${user.getUser_surname()}"/>
+            <a class="back_img" th:href="@{/users}"><img th:src="@{/img/back.png}" width="50" height="50" alt="back"></a>
+            <p class="user_info" th:text="${user.getUserName()} + ' ' + ${user.getUserSurname()}"/>
             <p class="user_info" th:text="'Age: ' + ${user.getAge()}"/>
             <p class="user_info" th:text="'Email: ' + ${user.getEmail()}"/>
-            <div class="link_container"><a class="back_link" th:href="'/users/' + ${user.getUser_id()} + '/edit'">Edit user!</a></div>
-            <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getUser_id()})}">
+            <div class="link_container"><a class="back_link" th:href="'/users/' + ${user.getUserId()} + '/edit'">Edit user!</a></div>
+            <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getUserId()})}">
                 <div>
                     <input class="button" type="submit" value="Delete user!">
                 </div>
             </form>
-            <div class="link_container"><a class="back_link" th:href="@{/users}">Back to users page</a></div>
         </div>
         <div class="articles_container">
             <div class="article" th:each="article: ${articles}">
-                <p class="article_title" th:text="${article.getArticle_name()}"/>
-                <p class="article_text" th:text="${article.getArticle_text()}"/>
-                <p th:text="${article.getPosting_date()}"/>
+                <a class="article_title" th:href="@{/articles/{id} (id=${article.getArticleId})}" th:text="${article.getArticleName()}"/>
+                <p class="article_text" th:text="${article.getArticleText()}"/>
+                <p th:text="${article.getPostingDate()}"/>
             </div>
         </div>
     </body>

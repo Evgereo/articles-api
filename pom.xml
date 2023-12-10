@@ -17,6 +17,7 @@
 
     <properties>
         <java.version>21</java.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
     </properties>
 
     <dependencies>

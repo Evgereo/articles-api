@@ -22,7 +22,7 @@ public class ArticlesDAO {
     }
 
     public List<Articles> getUserArticles(int id){
-        return jdbcTemplate.query("SELECT * FROM articles WHERE author_id = ?", new BeanPropertyRowMapper<>(Articles.class), id);
+        return jdbcTemplate.query("SELECT * FROM articles WHERE author_id = ? ORDER BY article_id", new BeanPropertyRowMapper<>(Articles.class), id);
     }
 
     public Articles getArticle(int id) {
@@ -32,6 +32,6 @@ public class ArticlesDAO {
 
     public void patchArticle(Articles article, int id) {
         jdbcTemplate.update("UPDATE articles SET article_name = ?, article_text = ? WHERE article_id = ?",
-                article.getArticle_name(), article.getArticle_text(), id);
+                article.getArticleName(), article.getArticleText(), id);
     }
 }

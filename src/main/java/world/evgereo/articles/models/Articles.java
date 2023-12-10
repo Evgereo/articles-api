@@ -1,49 +1,49 @@
 package world.evgereo.articles.models;
 
 public class Articles {
-    private int article_id;
-    private int author_id;
-    private String article_name;
-    private String article_text;
-    private String posting_date;
+    private int articleId;
+    private int authorId;
+    private String articleName;
+    private String articleText;
+    private String postingDate;
 
-    public int getArticle_id() {
-        return article_id;
+    public int getArticleId() {
+        return articleId;
     }
 
-    public void setArticle_id(int article_id) {
-        this.article_id = article_id;
+    public void setArticleId(int articleId) {
+        this.articleId = articleId;
     }
 
-    public int getAuthor_id() {
-        return author_id;
+    public int getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor_id(int author_id) {
-        this.author_id = author_id;
+    public void setAuthor_id(int authorId) {
+        this.authorId = authorId;
     }
 
-    public String getArticle_name() {
-        return article_name;
+    public String getArticleName() {
+        return articleName;
     }
 
-    public void setArticle_name(String article_name) {
-        this.article_name = article_name;
+    public void setArticleName(String articleName) {
+        this.articleName = articleName;
     }
 
-    public String getArticle_text() {
-        return article_text;
+    public String getArticleText() {
+        return articleText;
     }
 
-    public void setArticle_text(String article_text) {
-        this.article_text = article_text;
+    public void setArticleText(String articleText) {
+        this.articleText = articleText;
     }
 
-    public String getPosting_date() {
-        return posting_date;
+    public String getPostingDate() {
+        return postingDate;
     }
 
-    public void setPosting_date(String posting_date) {
-        this.posting_date = posting_date;
+    public void setPostingDate(String postingDate) {
+        this.postingDate = postingDate;
     }
 }

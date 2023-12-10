@@ -28,7 +28,7 @@ public class ArticlesController {
     @GetMapping("/{id}")
     public String article(Model model, @PathVariable("id") int id) {
         model.addAttribute("article", articlesDAO.getArticle(id));
-        model.addAttribute("user", usersDAO.getUser(articlesDAO.getArticle(id).getAuthor_id()));
+        model.addAttribute("user", usersDAO.getUser(articlesDAO.getArticle(id).getAuthorId()));
         return "articles/article";
     }
 
@@ -36,7 +36,7 @@ public class ArticlesController {
     @GetMapping("{id}/edit")
     public String editArticle(Model model, @PathVariable("id") int id) {
         model.addAttribute("article", articlesDAO.getArticle(id));
-        model.addAttribute("user", usersDAO.getUser(articlesDAO.getArticle(id).getAuthor_id()));
+        model.addAttribute("user", usersDAO.getUser(articlesDAO.getArticle(id).getAuthorId()));
         return "/articles/edit";
     }
 
