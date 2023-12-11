@@ -16,6 +16,12 @@
             font-family: Arial,serif;
             color: darkmagenta;
         }
+        .text_errors{
+            margin: auto;
+            font-size: 30px;
+            font-family: Arial,serif;
+            color: darkred;
+        }
         .text_field{
             display: inline-block;
             width: 30%;
@@ -52,11 +58,13 @@
             <div>
                 <label class="text_label" for="user_name">Name:</label> <br>
                 <input class="text_field" type="text" th:field="*{userName}" id="user_name"  maxlength="100">
+                <p class="text_errors" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
             </div>
             <br>
             <div>
                 <label class="text_label" for="user_surname">Surname:</label> <br>
                 <input class="text_field" type="text" th:field="*{userSurname}" id="user_surname" maxlength="100">
+                <p class="text_errors" th:if="${#fields.hasErrors('userSurname')}" th:errors="*{userSurname}"></p>
             </div>
             <br>
             <div>
@@ -69,11 +77,13 @@
             <div>
                 <label class="text_label" for="email">Email:</label> <br>
                 <input class="text_field" type="text" th:field="*{email}" id="email" maxlength="150">
+                <p class="text_errors" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
             </div>
             <br>
             <div>
                 <label class="text_label" for="password">Password:</label> <br>
-                <input class="text_field" type="text" th:field="*{password}" id="password" maxlength="150">
+                <input class="text_field" type="text" th:field="*{password}" id="password" maxlength="100">
+                <p class="text_errors" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
             </div>
             <br>
             <div>

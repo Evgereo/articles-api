@@ -8,16 +8,9 @@ import world.evgereo.articles.DAO.UsersDAO;
 
 @Controller
 public class MainController {
-//    private final UsersDAO usersDAO;
-//    private final ArticlesDAO articlesDAO;
-//
-//    public MainController(UsersDAO usersDAO, ArticlesDAO articlesDAO) {
-//        this.usersDAO = usersDAO;
-//        this.articlesDAO = articlesDAO;
-//    }
 
     @GetMapping()
     public String welcomePage(Model model) {
-        return "main/welcome";
+        return "main/home";
     }
 }

@@ -6,6 +6,12 @@
         body{
             background: burlywood;
         }
+        .header_block{
+            display: block;
+            height: 50px;
+            background: #ffb790;
+            border: solid 1px darkmagenta;
+        }
         .user{
             text-align: center;
             margin: 10px auto;
@@ -23,8 +29,9 @@
             color: indigo;
         }
         .back_img{
+            vertical-align: center;
+            margin: 10px 10px;
             float: left;
-            display: inline-block;
         }
         .link_container{
             margin: 10px auto;
@@ -69,12 +76,17 @@
     <title th:text="${user.getUserName()} + ' ' + ${user.getUserSurname()}"/>
 </head>
     <body>
+        <header>
+            <div class="header_block">
+                <a class="back_img" th:href="@{/users}"><img th:src="@{/img/back.png}" width="30" height="30" alt="back"></a>
+                <a class="back_img" th:href="@{/}"><img th:src="@{/img/home.png}" width="30" height="30" alt="home"></a>
+            </div>
+        </header>
         <div class="user">
-            <a class="back_img" th:href="@{/users}"><img th:src="@{/img/back.png}" width="50" height="50" alt="back"></a>
             <p class="user_info" th:text="${user.getUserName()} + ' ' + ${user.getUserSurname()}"/>
             <p class="user_info" th:text="'Age: ' + ${user.getAge()}"/>
             <p class="user_info" th:text="'Email: ' + ${user.getEmail()}"/>
-            <div class="link_container"><a class="back_link" th:href="'/users/' + ${user.getUserId()} + '/edit'">Edit user!</a></div>
+            <div class="link_container"><a class="back_link" th:href="@{/users/{id}/edit(id=${user.getUserId()})}">Edit user!</a></div>
             <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getUserId()})}">
                 <div>
                     <input class="button" type="submit" value="Delete user!">

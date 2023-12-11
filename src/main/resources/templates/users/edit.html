@@ -32,6 +32,12 @@
             border-radius: 0.25rem;
             transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         }
+        .text_errors{
+            margin: auto;
+            font-size: 30px;
+            font-family: Arial,serif;
+            color: darkred;
+        }
         .button{
             min-width: 100px;
             font-family: Arial, serif;
@@ -49,14 +55,17 @@
 <body>
 <div class="form_container">
     <form th:method="PATCH" th:action="@{/users/{id}/edit(id=${user.getUserId()})}" th:object="${user}">
+        <input hidden type="hidden" th:field="*{userId}">
         <div>
             <label class="text_label" for="user_name">Name:</label> <br>
             <input class="text_field" type="text" th:field="*{userName}" id="user_name"  maxlength="100">
+            <p class="text_errors" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
         </div>
         <br>
         <div>
             <label class="text_label" for="user_surname">Surname:</label> <br>
             <input class="text_field" type="text" th:field="*{userSurname}" id="user_surname" maxlength="100">
+            <p class="text_errors" th:if="${#fields.hasErrors('userSurname')}" th:errors="*{userSurname}"></p>
         </div>
         <br>
         <div>
@@ -69,6 +78,7 @@
         <div>
             <label class="text_label" for="email">Email:</label> <br>
             <input class="text_field" type="text" th:field="*{email}" id="email" maxlength="150">
+            <p class="text_errors" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
         </div>
         <br>
         <div>

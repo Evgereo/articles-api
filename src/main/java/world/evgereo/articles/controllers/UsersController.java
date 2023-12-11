@@ -1,7 +1,9 @@
 package world.evgereo.articles.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import world.evgereo.articles.DAO.ArticlesDAO;
 import world.evgereo.articles.DAO.UsersDAO;
@@ -38,7 +40,10 @@ public class UsersController {
     }
 
     @PatchMapping("/{id}/edit")
-    public String updateUser(@ModelAttribute("user") Users user, @PathVariable("id") int id){
+    public String updateUser(@Valid @ModelAttribute("user") Users user, BindingResult bindingResult, @PathVariable("id") int id){
+        if (bindingResult.hasErrors()) {
+            return "users/edit";
+        }
         usersDAO.patchUser(user, id);
         return "redirect:/users/" + id;
     }
@@ -55,7 +60,10 @@ public class UsersController {
     }
 
     @PostMapping("/new")
-    public String createUser(@ModelAttribute("user") Users user) {
+    public String createUser(@ModelAttribute("user") @Valid Users user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "users/new";
+        }
         usersDAO.postUser(user);
         return "redirect:/users";
     }

@@ -16,7 +16,7 @@ public class UsersDAO {
     }
 
     public List<Users> getUsers() {
-        return jdbcTemplate.query("SELECT * FROM users ORDER BY user_name", new BeanPropertyRowMapper<>(Users.class));
+        return jdbcTemplate.query("SELECT * FROM users ORDER BY user_id", new BeanPropertyRowMapper<>(Users.class));
     }
 
     public Users getUser(int id) {
