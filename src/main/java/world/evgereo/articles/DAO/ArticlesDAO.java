@@ -4,14 +4,13 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import world.evgereo.articles.models.Articles;
-import world.evgereo.articles.models.Users;
 
 import java.util.List;
 
 @Component
 public class ArticlesDAO {
     private final JdbcTemplate jdbcTemplate;
-
+    // next line can be deleted, spring injects the jdbcTemplate by itself
     public ArticlesDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
