@@ -2,9 +2,11 @@ package world.evgereo.articles.models;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 
 @Data
 public class Users {
+    @Id
     private int userId;
     @NotBlank(message = "Name should be not empty or blank")
     @Size(min=2, max=100, message = "Size of your name too short or long")

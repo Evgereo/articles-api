@@ -81,6 +81,13 @@
             <p class="text_errors" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
         </div>
         <br>
+        <!--must will be edited-->
+        <div>
+            <label class="text_label" for="password">Email:</label> <br>
+            <input class="text_field" type="text" th:field="*{password}" id="password" maxlength="150">
+            <p class="text_errors" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+        </div>
+        <br>
         <div>
             <input class="button" type="submit" value="Update!">
         </div>

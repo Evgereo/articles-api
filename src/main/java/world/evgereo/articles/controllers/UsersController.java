@@ -5,52 +5,67 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import world.evgereo.articles.DAO.ArticlesDAO;
-import world.evgereo.articles.DAO.UsersDAO;
 import world.evgereo.articles.models.Users;
+import world.evgereo.articles.repositories.ArticlesRepository;
+import world.evgereo.articles.repositories.UsersRepository;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
 public class UsersController {
-    private final UsersDAO usersDAO;
-    private final ArticlesDAO articlesDAO;
+    private final UsersRepository usersRepository;
+    private final ArticlesRepository articlesRepository;
 
-    public UsersController(UsersDAO userDAO, ArticlesDAO articlesDAO) {
-        this.usersDAO = userDAO;
-        this.articlesDAO = articlesDAO;
+    public UsersController(UsersRepository usersRepository, ArticlesRepository articlesRepository) {
+        this.usersRepository = usersRepository;
+        this.articlesRepository = articlesRepository;
     }
 
     @GetMapping()
     public String users(Model model){
-        model.addAttribute("users", usersDAO.getUsers());
+        model.addAttribute("users", usersRepository.findAll());
         return "users/users";
     }
 
     @GetMapping("/{id}")
     public String user(Model model, @PathVariable("id") int id) {
-        model.addAttribute("user", usersDAO.getUser(id));
-        model.addAttribute("articles", articlesDAO.getUserArticles(id));
-        return "users/profile";
+        Optional<Users> user = usersRepository.findById(id);
+        if (user.isPresent()) {
+            model.addAttribute("user", user.get());
+            model.addAttribute("articles", articlesRepository.findByAuthorId(id));
+            return "users/profile";
+        } else {
+            return "notfound";
+        }
     }
 
     @GetMapping("/{id}/edit")
     public String editUser(Model model, @PathVariable("id") int id) {
-        model.addAttribute("user", usersDAO.getUser(id));
+        Optional<Users> user = usersRepository.findById(id);
+        if (user.isPresent()) {
+            model.addAttribute("user", user.get());
+        } else {
+            return "notfound";
+        }
+        System.out.println(usersRepository.findById(id));
         return "users/edit";
     }
 
-    @PatchMapping("/{id}/edit")
-    public String updateUser(@Valid @ModelAttribute("user") Users user, BindingResult bindingResult, @PathVariable("id") int id){
+    // there may be errors
+    @PatchMapping("/*/edit")
+    public String updateUser(@Valid @ModelAttribute("user") Users user, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return "users/edit";
         }
-        usersDAO.patchUser(user, id);
-        return "redirect:/users/" + id;
+        usersRepository.save(user);
+        return "redirect:/users/" + user.getUserId();
     }
 
+    // must will be changed
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable("id") int id){
-        usersDAO.deleteUser(id);
+        usersRepository.deleteById(id);
         return "redirect:/users";
     }
 
@@ -64,7 +79,7 @@ public class UsersController {
         if (bindingResult.hasErrors()) {
             return "users/new";
         }
-        usersDAO.postUser(user);
+        usersRepository.save(user);
         return "redirect:/users";
     }
 }

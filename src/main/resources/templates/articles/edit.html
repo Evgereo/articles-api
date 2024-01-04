@@ -53,6 +53,9 @@
         <p class="text_label" th:text="${article.getPostingDate()}"></p>
     </div>
     <form th:method="PATCH" th:action="@{/articles/{id}/edit(id=${article.getArticleId})}" th:object="${article}">
+        <input hidden type="hidden" th:field="*{articleId}">
+        <input hidden type="hidden" th:field="*{authorId}">
+        <input hidden type="hidden" th:field="*{postingDate}">
         <div>
             <label class="text_label" for="article_name">Name of article:</label> <br>
             <input class="text_field" type="text" th:field="*{articleName}" id="article_name" maxlength="100">
