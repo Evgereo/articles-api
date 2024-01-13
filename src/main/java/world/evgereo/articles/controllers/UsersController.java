@@ -8,32 +8,30 @@ import org.springframework.web.bind.annotation.*;
 import world.evgereo.articles.models.Users;
 import world.evgereo.articles.repositories.ArticlesRepository;
 import world.evgereo.articles.repositories.UsersRepository;
+import world.evgereo.articles.services.UsersService;
 
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
 public class UsersController {
-    private final UsersRepository usersRepository;
-    private final ArticlesRepository articlesRepository;
+    private final UsersService usersService;
 
-    public UsersController(UsersRepository usersRepository, ArticlesRepository articlesRepository) {
-        this.usersRepository = usersRepository;
-        this.articlesRepository = articlesRepository;
+    public UsersController(UsersService usersService) {
+        this.usersService = usersService;
     }
 
     @GetMapping()
     public String users(Model model){
-        model.addAttribute("users", usersRepository.findAll());
+        model.addAttribute("users", usersService.getUsers());
         return "users/users";
     }
 
     @GetMapping("/{id}")
     public String user(Model model, @PathVariable("id") int id) {
-        Optional<Users> user = usersRepository.findById(id);
-        if (user.isPresent()) {
-            model.addAttribute("user", user.get());
-            model.addAttribute("articles", articlesRepository.findByAuthorId(id));
+        Users user = usersService.getUser(id);
+        if (user != null) {
+            model.addAttribute("user", user);
             return "users/profile";
         } else {
             return "notfound";
@@ -42,30 +40,29 @@ public class UsersController {
 
     @GetMapping("/{id}/edit")
     public String editUser(Model model, @PathVariable("id") int id) {
-        Optional<Users> user = usersRepository.findById(id);
-        if (user.isPresent()) {
-            model.addAttribute("user", user.get());
+        Users user = usersService.getUser(id);
+        if (user != null) {
+            model.addAttribute("user", user);
         } else {
             return "notfound";
         }
-        System.out.println(usersRepository.findById(id));
         return "users/edit";
     }
 
     // there may be errors
-    @PatchMapping("/*/edit")
-    public String updateUser(@Valid @ModelAttribute("user") Users user, BindingResult bindingResult){
+    @PatchMapping("/{id}/edit")
+    public String updateUser(@Valid @ModelAttribute("user") Users user, BindingResult bindingResult, @PathVariable("id") int id){
         if (bindingResult.hasErrors()) {
             return "users/edit";
         }
-        usersRepository.save(user);
-        return "redirect:/users/" + user.getUserId();
+        usersService.updateUser(user, id);
+        return "redirect:/users/{id}";
     }
 
     // must will be changed
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable("id") int id){
-        usersRepository.deleteById(id);
+        usersService.deleteUser(id);
         return "redirect:/users";
     }
 
@@ -79,7 +76,7 @@ public class UsersController {
         if (bindingResult.hasErrors()) {
             return "users/new";
         }
-        usersRepository.save(user);
+        usersService.createUser(user);
         return "redirect:/users";
     }
 }

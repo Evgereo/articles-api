@@ -54,8 +54,7 @@
 </head>
 <body>
 <div class="form_container">
-    <form th:method="PATCH" th:action="@{/users/{id}/edit(id=${user.getUserId()})}" th:object="${user}">
-        <input hidden type="hidden" th:field="*{userId}">
+    <form th:method="PATCH" th:action="@{/users/{id}/edit(id=${user.getUserId()})}" th:object="${user}">s
         <div>
             <label class="text_label" for="user_name">Name:</label> <br>
             <input class="text_field" type="text" th:field="*{userName}" id="user_name"  maxlength="100">
@@ -79,13 +78,6 @@
             <label class="text_label" for="email">Email:</label> <br>
             <input class="text_field" type="text" th:field="*{email}" id="email" maxlength="150">
             <p class="text_errors" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
-        </div>
-        <br>
-        <!--must will be edited-->
-        <div>
-            <label class="text_label" for="password">Email:</label> <br>
-            <input class="text_field" type="text" th:field="*{password}" id="password" maxlength="150">
-            <p class="text_errors" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
         </div>
         <br>
         <div>

@@ -78,7 +78,6 @@
     <body>
         <header>
             <div class="header_block">
-                <a class="back_img" th:href="@{/users}"><img th:src="@{/img/back.png}" width="30" height="30" alt="back"></a>
                 <a class="back_img" th:href="@{/}"><img th:src="@{/img/home.png}" width="30" height="30" alt="home"></a>
             </div>
         </header>
@@ -94,7 +93,7 @@
             </form>
         </div>
         <div class="articles_container">
-            <div class="article" th:each="article: ${articles}">
+            <div class="article" th:each="article: ${user.getArticles()}">
                 <a class="article_title" th:href="@{/articles/{id} (id=${article.getArticleId})}" th:text="${article.getArticleName()}"/>
                 <p class="article_text" th:text="${article.getArticleText()}"/>
                 <p th:text="${article.getPostingDate()}"/>

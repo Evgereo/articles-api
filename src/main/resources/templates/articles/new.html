@@ -16,6 +16,12 @@
             font-family: Arial,serif;
             color: darkmagenta;
         }
+        .text_errors{
+            margin: auto;
+            font-size: 30px;
+            font-family: Arial,serif;
+            color: darkred;
+        }
         .text_field{
             display: inline-block;
             width: 30%;
@@ -44,18 +50,15 @@
             font-size: 26px;
         }
     </style>
-    <title>Update article</title>
+    <title>New article</title>
 </head>
 <body>
 <div class="form_container">
-    <div>
-        <p class="text_label" th:text="${article.getAuthor().getUserName()} + ' ' + ${article.getAuthor().getUserSurname()}"></p>
-        <p class="text_label" th:text="${article.getPostingDate()}"></p>
-    </div>
-    <form th:method="PATCH" th:action="@{/articles/{id}/edit(id=${article.getArticleId})}" th:object="${article}">
+    <form th:method="POST" th:action="@{/articles/new}" th:object="${article}">
         <div>
-            <label class="text_label" for="article_name">Name of article:</label> <br>
-            <input class="text_field" type="text" th:field="*{articleName}" id="article_name" maxlength="100">
+            <label class="text_label" for="article_name">Name:</label> <br>
+            <input class="text_field" type="text" th:field="*{articleName}" id="article_name"  maxlength="100">
+            <p class="text_errors" th:if="${#fields.hasErrors('articleName')}" th:errors="*{articleName}"></p>
         </div>
         <br>
         <div>
@@ -64,7 +67,7 @@
         </div>
         <br>
         <div>
-            <input class="button" type="submit" value="Update!">
+            <input class="button" type="submit" value="Create new article!">
         </div>
     </form>
 </div>
