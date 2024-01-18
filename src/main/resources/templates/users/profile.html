@@ -91,6 +91,11 @@
                     <input class="button" type="submit" value="Delete user!">
                 </div>
             </form>
+            <form th:method="POST" th:action="@{/users/{id}(id=${user.getUserId()})}">
+                <div>
+                    <input class="button" type="submit" value="logout!">
+                </div>
+            </form>
         </div>
         <div class="articles_container">
             <div class="article" th:each="article: ${user.getArticles()}">

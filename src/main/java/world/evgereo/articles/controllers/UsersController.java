@@ -1,16 +1,13 @@
 package world.evgereo.articles.controllers;
 
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import world.evgereo.articles.models.Users;
-import world.evgereo.articles.repositories.ArticlesRepository;
-import world.evgereo.articles.repositories.UsersRepository;
 import world.evgereo.articles.services.UsersService;
-
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
@@ -29,7 +26,7 @@ public class UsersController {
 
     @GetMapping("/{id}")
     public String user(Model model, @PathVariable("id") int id) {
-        Users user = usersService.getUser(id);
+        Users user = usersService.getUserById(id);
         if (user != null) {
             model.addAttribute("user", user);
             return "users/profile";
@@ -39,8 +36,9 @@ public class UsersController {
     }
 
     @GetMapping("/{id}/edit")
+//    @PreAuthorize(value = "hasRole('MODERATOR')")
     public String editUser(Model model, @PathVariable("id") int id) {
-        Users user = usersService.getUser(id);
+        Users user = usersService.getUserById(id);
         if (user != null) {
             model.addAttribute("user", user);
         } else {
@@ -51,6 +49,7 @@ public class UsersController {
 
     // there may be errors
     @PatchMapping("/{id}/edit")
+    //@PreAuthorize(value = "hasRole('ROLE_MODERATOR') || usersService.isCurrentUserPage(#id)")
     public String updateUser(@Valid @ModelAttribute("user") Users user, BindingResult bindingResult, @PathVariable("id") int id){
         if (bindingResult.hasErrors()) {
             return "users/edit";
@@ -61,22 +60,9 @@ public class UsersController {
 
     // must will be changed
     @DeleteMapping("/{id}")
+    //@PreAuthorize(value = "hasRole('ROLE_MODERATOR') || usersService.isCurrentUserPage(id)")
     public String deleteUser(@PathVariable("id") int id){
         usersService.deleteUser(id);
-        return "redirect:/users";
-    }
-
-    @GetMapping("/new")
-    public String newUser(@ModelAttribute("user") Users user) {
-        return "users/new";
-    }
-
-    @PostMapping("/new")
-    public String createUser(@ModelAttribute("user") @Valid Users user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "users/new";
-        }
-        usersService.createUser(user);
         return "redirect:/users";
     }
 }

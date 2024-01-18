@@ -2,9 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>Sign in!</title>
+  <style>
+    body{
+      background: burlywood;
+    }
+    .form_container{
+      text-align: center;
+      margin: 30px auto;
+    }
+    .link{
+      font-size: 18px;
+      font-family: Arial,serif;
+      color: indigo;
+      text-decoration: none;
+    }
+    .text_label{
+      margin: auto;
+      font-size: 30px;
+      font-family: Arial,serif;
+      color: darkmagenta;
+    }
+    .text_field{
+      display: inline-block;
+      width: 30%;
+      height: calc(2.25rem + 2px);
+      padding: 0.375rem 0.75rem;
+      font-family: Arial, serif;
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid #bdbdbd;
+      border-radius: 0.25rem;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .text_errors{
+      margin: auto;
+      font-size: 30px;
+      font-family: Arial,serif;
+      color: darkred;
+    }
+    .button{
+      min-width: 100px;
+      font-family: Arial, serif;
+      appearance: none;
+      border: 0;
+      border-radius: 5px;
+      background: indigo;
+      color: #fff;
+      padding: 8px 16px;
+      font-size: 26px;
+    }
+  </style>
 </head>
-<body>
-$END$
-</body>
+  <body>
+  <div class="form_container">
+    <p class="text_errors" th:if="${param.error}">Invalid username and password.</p>
+    <p class="text_errors" th:if="${param.logout}">You have been logged out.</p>
+  </div>
+  <div class="form_container">
+    <form method="POST" th:action="@{/login}" >
+      <label class="text_label" for="username">Email: </label>
+      <input class="text_field" type="text" name="username" id="username" />
+      <br/>
+      <label class="text_label" for="password">Password: </label>
+      <input class="text_field" type="password" name="password" id="password" />
+      <br/>
+      <input class="button" type="submit" value="Login"/>
+    </form>
+    <div class="form_container">
+      <p class="text_label">You don't have an account? </p>
+      <a class="link" href="/registration">Register now!</a>
+    </div>
+  </div>
+  </body>
 </html>

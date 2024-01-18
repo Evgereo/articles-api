@@ -28,8 +28,6 @@ public class ArticlesService {
             Articles existingArticle = optionalArticles.get();
             existingArticle.setArticleName(article.getArticleName());
             existingArticle.setArticleText(article.getArticleText());
-            System.out.println(existingArticle);
-
             articlesRepository.save(existingArticle);
         }
     }

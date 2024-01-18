@@ -1,6 +1,11 @@
 package world.evgereo.articles.services;
 
-import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import world.evgereo.articles.models.Users;
 import world.evgereo.articles.repositories.UsersRepository;
@@ -9,19 +14,30 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
-public class UsersService {
-    private UsersRepository usersRepository;
+public class UsersService implements UserDetailsService {
+    private final UsersRepository usersRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UsersService(UsersRepository usersRepository,@Lazy PasswordEncoder passwordEncoder) {
+        this.usersRepository = usersRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public List<Users> getUsers() {
         return usersRepository.findAll();
     }
 
-    public Users getUser(int id) {
+    public Users getUserById(int id) {
         Optional<Users> user = usersRepository.findById(id);
         return user.orElse(null);
     }
 
+    public Users getUserByEmail(String email) {
+        Optional<Users> user = usersRepository.findUsersByEmail(email);
+        return user.orElse(null);
+    }
+
+    @PreAuthorize("hasRole('ROLE_MODERATOR') or authentication.principal.userId == #id")
     public void updateUser(Users user, int id) {
         Optional<Users> optionalUser = usersRepository.findById(id);
         if (optionalUser.isPresent()) {
@@ -34,11 +50,24 @@ public class UsersService {
         }
     }
 
-    public void createUser(Users user) {
+    public boolean createUser(Users user) {
+        Users isExitingUser = this.getUserByEmail(user.getEmail());
+        if(isExitingUser != null) return false;
+        if(!user.getPassword().equals(user.getPasswordConfirm())) return false;
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         usersRepository.save(user);
+        return true;
     }
 
+    @PreAuthorize("hasRole('ROLE_MODERATOR') or authentication.principal.userId == #id")
     public void deleteUser(int id) {
         usersRepository.deleteById(id);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Users user = this.getUserByEmail(email);
+        if (user != null) return user;
+        else throw new UsernameNotFoundException("User with " + email + " not found.");
     }
 }

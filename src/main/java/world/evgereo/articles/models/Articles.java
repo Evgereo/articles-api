@@ -1,6 +1,8 @@
 package world.evgereo.articles.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,9 +18,8 @@ public class Articles {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int articleId;
 
-    @Column(name = "author_id", insertable=false, nullable = false, updatable=false)
-    private int authorId;
-
+    @NotBlank
+    @Size(min=2, max=300)
     private String articleName;
 
     private String articleText;
