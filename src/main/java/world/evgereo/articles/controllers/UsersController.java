@@ -36,7 +36,6 @@ public class UsersController {
     }
 
     @GetMapping("/{id}/edit")
-//    @PreAuthorize(value = "hasRole('MODERATOR')")
     public String editUser(Model model, @PathVariable("id") int id) {
         Users user = usersService.getUserById(id);
         if (user != null) {
@@ -49,7 +48,6 @@ public class UsersController {
 
     // there may be errors
     @PatchMapping("/{id}/edit")
-    //@PreAuthorize(value = "hasRole('ROLE_MODERATOR') || usersService.isCurrentUserPage(#id)")
     public String updateUser(@Valid @ModelAttribute("user") Users user, BindingResult bindingResult, @PathVariable("id") int id){
         if (bindingResult.hasErrors()) {
             return "users/edit";
@@ -60,7 +58,6 @@ public class UsersController {
 
     // must will be changed
     @DeleteMapping("/{id}")
-    //@PreAuthorize(value = "hasRole('ROLE_MODERATOR') || usersService.isCurrentUserPage(id)")
     public String deleteUser(@PathVariable("id") int id){
         usersService.deleteUser(id);
         return "redirect:/users";

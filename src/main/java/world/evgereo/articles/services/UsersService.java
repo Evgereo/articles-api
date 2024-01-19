@@ -7,11 +7,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import world.evgereo.articles.models.Roles;
 import world.evgereo.articles.models.Users;
 import world.evgereo.articles.repositories.UsersRepository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UsersService implements UserDetailsService {
@@ -55,6 +55,7 @@ public class UsersService implements UserDetailsService {
         if(isExitingUser != null) return false;
         if(!user.getPassword().equals(user.getPasswordConfirm())) return false;
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Collections.singleton(new Roles(1, "ROLE_USER")));
         usersRepository.save(user);
         return true;
     }

@@ -1,8 +1,11 @@
 package world.evgereo.articles.services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import world.evgereo.articles.models.Articles;
+import world.evgereo.articles.models.Users;
 import world.evgereo.articles.repositories.ArticlesRepository;
 
 import java.util.List;
@@ -33,6 +36,9 @@ public class ArticlesService {
     }
 
     public void createArticle(Articles article) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Users currentUser = (Users) authentication.getPrincipal();
+        article.setAuthor(currentUser);
         articlesRepository.save(article);
     }
 

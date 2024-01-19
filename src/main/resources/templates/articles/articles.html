@@ -6,6 +6,10 @@
         body{
             background: burlywood;
         }
+        header{
+            background: bisque;
+            text-align: right;
+        }
         .articles_container{
             text-align: center;
             margin: 30px auto;
@@ -29,6 +33,13 @@
             overflow: hidden;
 
         }
+        .new_link{
+            margin: 30px 30px;
+            font-size: 30px;
+            font-family: Arial,serif;
+            color: indigo;
+            text-decoration: none;
+        }
         .user_link{
             font-size: 18px;
             font-family: Arial,serif;
@@ -37,12 +48,15 @@
     </style>
     <title>Articles</title>
 </head>
+    <header>
+        <a class="new_link" href="articles/new">Create an article!</a>
+    </header>
     <body>
     <div class="articles_container">
         <div th:each="article: ${articles}" class="article">
             <a class="article_title" th:href="@{/articles/{id} (id=${article.getArticleId()})}" th:text="${article.getArticleName()}">Article name</a>
             <p class="article_text" th:text="${article.getArticleText()}"></p>
-            <a class="user_link" th:href="@{/users/{id} (id=${article.getAuthor().getUserId()})}">See author!</a>
+            <a class="user_link" th:href="@{/users/{id} (id=${article.getAuthor().getUserId()})}" th:text="${article.getAuthor().userName} + ' ' + ${article.getAuthor().getUserSurname()}"></a>
             <a class="user_link" th:href="@{/articles/{id}/edit (id=${article.getArticleId()})}">Edit article</a>
         </div>
     </div>
