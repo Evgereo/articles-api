@@ -1,16 +1,19 @@
 package world.evgereo.articles.controllers;
 
 import jakarta.validation.Valid;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import world.evgereo.articles.models.Users;
 import world.evgereo.articles.services.UsersService;
 
-@Controller
-@RequestMapping("/users")
+import java.util.List;
+
+@RestController
+@RequestMapping(path = "/users", produces = "application/json")
+@CrossOrigin(origins = "http://localhost:8080")
 public class UsersController {
     private final UsersService usersService;
 
@@ -19,47 +22,39 @@ public class UsersController {
     }
 
     @GetMapping()
-    public String users(Model model){
-        model.addAttribute("users", usersService.getUsers());
-        return "users/users";
+    public ResponseEntity<List<Users>> users(){
+        return new ResponseEntity<>(usersService.getUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public String user(Model model, @PathVariable("id") int id) {
+    public ResponseEntity<Users> user(@PathVariable("id") int id) {
         Users user = usersService.getUserById(id);
         if (user != null) {
-            model.addAttribute("user", user);
-            return "users/profile";
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
-            return "notfound";
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/{id}/edit")
-    public String editUser(Model model, @PathVariable("id") int id) {
+    @GetMapping(value = "/{id}", params = "edit")
+    public ResponseEntity<Users> editUser(@PathVariable("id") int id) {
         Users user = usersService.getUserById(id);
         if (user != null) {
-            model.addAttribute("user", user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
-            return "notfound";
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
-        return "users/edit";
     }
 
-    // there may be errors
-    @PatchMapping("/{id}/edit")
-    public String updateUser(@Valid @ModelAttribute("user") Users user, BindingResult bindingResult, @PathVariable("id") int id){
-        if (bindingResult.hasErrors()) {
-            return "users/edit";
-        }
+    @PatchMapping(value = "/{id}", params = "edit")
+    public ResponseEntity<Users> updateUser(@RequestBody @Valid Users user, @PathVariable("id") int id){
         usersService.updateUser(user, id);
-        return "redirect:/users/{id}";
+        return new ResponseEntity<>(usersService.getUserById(id), HttpStatus.OK);
     }
 
-    // must will be changed
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable("id") int id){
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable("id") int id){
         usersService.deleteUser(id);
-        return "redirect:/users";
     }
 }

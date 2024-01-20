@@ -10,7 +10,7 @@ import world.evgereo.articles.models.Users;
 import java.util.function.Supplier;
 
 @Component
-public class UsersSecurity implements AuthorizationManager<RequestAuthorizationContext> {
+public class UsersAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
 
 @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {

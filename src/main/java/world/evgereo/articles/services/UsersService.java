@@ -11,7 +11,10 @@ import world.evgereo.articles.models.Roles;
 import world.evgereo.articles.models.Users;
 import world.evgereo.articles.repositories.UsersRepository;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 
 @Service
 public class UsersService implements UserDetailsService {
@@ -68,7 +71,10 @@ public class UsersService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Users user = this.getUserByEmail(email);
-        if (user != null) return user;
-        else throw new UsernameNotFoundException("User with " + email + " not found.");
+        if (user != null) {
+            return user;
+        } else {
+            throw new UsernameNotFoundException("User with " + email + " not found.");
+        }
     }
 }

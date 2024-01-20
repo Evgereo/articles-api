@@ -1,15 +1,16 @@
 package world.evgereo.articles.controllers;
 
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import world.evgereo.articles.models.Users;
 import world.evgereo.articles.services.UsersService;
 
-@Controller
+@RestController
 public class RegistrationController {
     private final UsersService usersService;
 
@@ -18,17 +19,23 @@ public class RegistrationController {
     }
 
     @GetMapping("/registration")
-    public String newUser(@ModelAttribute("user") Users user) {
-        return "registration";
+    public ResponseEntity<Users> newUser() {
+        return new ResponseEntity<>(new Users(), HttpStatus.OK);
     }
 
-    @PostMapping("/registration")
-    public String createUser(@ModelAttribute("user") @Valid Users user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "registration";
-        }
-        if(usersService.createUser(user)) return "redirect:/users";
-        bindingResult.rejectValue("email", "error.user", "An account already exists for this email.");
-        return "registration";
+    @PostMapping(value = "/registration", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Users> createUser(@RequestBody @Valid Users user) {
+        return (usersService.createUser(user)) ?
+                new ResponseEntity<>(usersService.getUserByEmail(user.getEmail()), HttpStatus.CREATED) :
+                null;
     }
 }
+
+// {
+//         "userName": "some",
+//         "userSurname": "user",
+//         "age": 12,
+//         "email": "3@gmail.com",
+//         "password": "root",
+//         "passwordConfirm": "root"
+//         }

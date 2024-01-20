@@ -6,12 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import world.evgereo.articles.models.Articles;
-import world.evgereo.articles.models.Users;
-import world.evgereo.articles.repositories.ArticlesRepository;
-import world.evgereo.articles.repositories.UsersRepository;
 import world.evgereo.articles.services.ArticlesService;
-
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/articles")
