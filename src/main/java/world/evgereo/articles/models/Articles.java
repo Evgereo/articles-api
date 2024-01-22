@@ -1,5 +1,6 @@
 package world.evgereo.articles.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -30,5 +31,6 @@ public class Articles {
 
     @ManyToOne
     @JoinColumn(name = "author_id", referencedColumnName = "user_id", nullable = false)
+    @JsonManagedReference
     private Users author;
 }

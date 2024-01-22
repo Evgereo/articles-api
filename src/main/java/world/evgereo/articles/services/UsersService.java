@@ -1,5 +1,6 @@
 package world.evgereo.articles.services;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,12 +8,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import world.evgereo.articles.DTO.UsersDTO;
 import world.evgereo.articles.models.Roles;
 import world.evgereo.articles.models.Users;
 import world.evgereo.articles.repositories.UsersRepository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -41,14 +44,15 @@ public class UsersService implements UserDetailsService {
     }
 
     @PreAuthorize("hasRole('ROLE_MODERATOR') or authentication.principal.userId == #id")
-    public void updateUser(Users user, int id) {
+    public void updateUser(UsersDTO user, int id) {
         Optional<Users> optionalUser = usersRepository.findById(id);
         if (optionalUser.isPresent()) {
             Users existingUser = optionalUser.get();
-            existingUser.setUserName(user.getUserName());
-            existingUser.setUserSurname(user.getUserSurname());
-            existingUser.setAge(user.getAge());
-            existingUser.setEmail(user.getEmail());
+            BeanUtils.copyProperties(existingUser, user);
+//            Objects.nonNull(user.getUserName())existingUser.setUserName();
+//            existingUser.setUserSurname(user.getUserSurname());
+//            existingUser.setAge(user.getAge());
+//            existingUser.setEmail(user.getEmail());
             usersRepository.save(existingUser);
         }
     }

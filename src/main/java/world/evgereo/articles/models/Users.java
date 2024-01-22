@@ -1,6 +1,9 @@
 package world.evgereo.articles.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -46,8 +49,8 @@ public class Users implements UserDetails {
     @Size(min=2, max=100, message = "Size of your password too short or long")
     private String passwordConfirm;
 
-    @OneToMany(mappedBy = "author")
-    @JsonIgnore // delete it
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
+    @JsonBackReference
     private List<Articles> articles = new ArrayList<>(); // look for information on the cascade types // orphanRemoval = true, cascade = CascadeType.ALL
 
     @ManyToMany(fetch = FetchType.EAGER)
