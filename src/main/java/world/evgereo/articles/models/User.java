@@ -1,11 +1,7 @@
 package world.evgereo.articles.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,48 +13,37 @@ import java.util.Set;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-public class Users implements UserDetails {
+@Table(name = "users")
+public class User implements UserDetails {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
-    @NotBlank(message = "Name should be not empty or blank")
-    @Size(min=2, max=100, message = "Size of your name too short or long")
+    @Getter()
     private String userName;
 
-    @NotBlank(message = "Surname should be not empty or blank")
-    @Size(min=2, max=100, message = "Size of your surname too short or long")
     private String userSurname;
 
-    @Min(0)
     private int age;
 
-    @NotBlank(message = "Email should be not empty")
-    @Email(message = "Please provide a valid email address")
-    @Size(max=150, message = "Maximum size of email is 150")
     private String email;
 
-    @Size(min=2, max=100, message = "Size of your password too short or long")
     private String password;
-
-    @Transient
-    @Size(min=2, max=100, message = "Size of your password too short or long")
-    private String passwordConfirm;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
     @JsonBackReference
-    private List<Articles> articles = new ArrayList<>(); // look for information on the cascade types // orphanRemoval = true, cascade = CascadeType.ALL
+    private List<Article> articles = new ArrayList<>(); // look for information on the cascade types // orphanRemoval = true, cascade = CascadeType.ALL
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Roles> roles;
-
+    @Getter(value = AccessLevel.PRIVATE)
+    private Set<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -67,10 +52,8 @@ public class Users implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.getUserName();
+        return this.userName;
     }
-
-    public String getUserName() {return userName;}
 
     @Override
     public boolean isAccountNonExpired() {

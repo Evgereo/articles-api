@@ -1,59 +1,50 @@
 package world.evgereo.articles.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import world.evgereo.articles.security.auth.handlers.AuthFailureHandler;
-import world.evgereo.articles.security.UsersAuthorizationManager;
-import world.evgereo.articles.security.auth.handlers.AuthSuccessHandler;
-import world.evgereo.articles.services.UsersService;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import world.evgereo.articles.errors.exceptions.ExceptionHandlerFilter;
+import world.evgereo.articles.security.UserAuthorizationManager;
+import world.evgereo.articles.services.UserService;
+import world.evgereo.articles.utils.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
-    private final UsersService usersService;
-    private final UsersAuthorizationManager usersAuthorizationManager;
-    //private final ArticlesAuthorizationManager articlesAuthorizationManager;
-    private final AuthFailureHandler authFailureHandler;
-    private final AuthSuccessHandler authSuccessHandler;
-
-    public SecurityConfig(UsersService usersService, UsersAuthorizationManager usersAuthorizationManager, AuthFailureHandler authFailureHandler, AuthSuccessHandler authSuccessHandler) {
-        this.usersService = usersService;
-        this.usersAuthorizationManager = usersAuthorizationManager;
-        this.authFailureHandler = authFailureHandler;
-        this.authSuccessHandler = authSuccessHandler;
-    }
+    private final UserService usersService;
+    private final UserAuthorizationManager usersAuthorizationManager;
+    // private final ArticlesAuthorizationManager articlesAuthorizationManager;
+    private final JwtFilter jwtFilter;
+    private final ExceptionHandlerFilter handlerFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/", "/login", "/articles", "/registration").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                        .requestMatchers("/", "/auth/**", "/articles", "/registration").permitAll()
                         .requestMatchers("/users/{id}/edit").access(usersAuthorizationManager)
                         //.requestMatchers("/articles/{id}/edit").access(articlesSecurity)
                         .anyRequest().authenticated())
                 .userDetailsService(usersService)
-                .formLogin(form -> form
-                        .failureHandler(authFailureHandler)
-                        .successHandler(authSuccessHandler)
-                        .usernameParameter("email")
-                        .loginPage("/login"))
-                .logout(logout -> logout
-                        .logoutUrl("/users/{id}").logoutSuccessUrl("/")
-                        .addLogoutHandler(new SecurityContextLogoutHandler()).deleteCookies("JSESSIONID"));
-
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(handlerFilter, JwtFilter.class);
         http.csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }

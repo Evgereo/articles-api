@@ -5,12 +5,12 @@ import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.stereotype.Component;
-import world.evgereo.articles.models.Users;
+import world.evgereo.articles.models.User;
 
 import java.util.function.Supplier;
 
 @Component
-public class UsersAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
+public class UserAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
 
 @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
@@ -21,7 +21,7 @@ public class UsersAuthorizationManager implements AuthorizationManager<RequestAu
     }
 
     public boolean isCurrentUserPage(Authentication authentication, int userId) {
-        Users currentUser = (Users) authentication.getPrincipal();
+        User currentUser = (User) authentication.getPrincipal();
         return currentUser.getUserId() == userId;
     }
 }

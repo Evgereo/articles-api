@@ -5,15 +5,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import world.evgereo.articles.models.Articles;
-import world.evgereo.articles.services.ArticlesService;
+import world.evgereo.articles.models.Article;
+import world.evgereo.articles.services.ArticleService;
 
 @Controller
 @RequestMapping("/articles")
-public class ArticlesController {
-    private final ArticlesService articlesService;
+public class ArticleController {
+    private final ArticleService articlesService;
 
-    public ArticlesController(ArticlesService articlesService) {
+    public ArticleController(ArticleService articlesService) {
         this.articlesService = articlesService;
     }
 
@@ -25,7 +25,7 @@ public class ArticlesController {
 
     @GetMapping("/{id}")
     public String article(Model model, @PathVariable("id") int id) {
-        Articles article = articlesService.getArticle(id);
+        Article article = articlesService.getArticle(id);
         if (article != null) {
             model.addAttribute("article", article);
             return "articles/article";
@@ -37,7 +37,7 @@ public class ArticlesController {
 
     @GetMapping("{id}/edit")
     public String editArticle(Model model, @PathVariable("id") int id) {
-        Articles article = articlesService.getArticle(id);
+        Article article = articlesService.getArticle(id);
         if (article != null) {
             model.addAttribute("article", article);
             return "/articles/edit";
@@ -48,7 +48,7 @@ public class ArticlesController {
 
     // there may be errors
     @PatchMapping("/{id}/edit")
-    public String updateUser(@ModelAttribute("article") Articles article, @PathVariable("id") int id){
+    public String updateUser(@ModelAttribute("article") Article article, @PathVariable("id") int id){
         System.out.println(article);
         articlesService.updateArticle(article, id);
         return "redirect:/articles/{id}";
@@ -61,12 +61,12 @@ public class ArticlesController {
     }
 
     @GetMapping("/new")
-    public String newUser(@ModelAttribute("article") Articles article) {
+    public String newUser(@ModelAttribute("article") Article article) {
         return "articles/new";
     }
 
     @PostMapping("/new")
-    public String createArticle(@ModelAttribute("article") @Valid Articles article, BindingResult bindingResult) {
+    public String createArticle(@ModelAttribute("article") @Valid Article article, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "articles/new";
         }

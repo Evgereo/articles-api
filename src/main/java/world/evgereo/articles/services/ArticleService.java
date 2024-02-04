@@ -1,43 +1,43 @@
 package world.evgereo.articles.services;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import world.evgereo.articles.models.Articles;
-import world.evgereo.articles.models.Users;
-import world.evgereo.articles.repositories.ArticlesRepository;
+import world.evgereo.articles.models.Article;
+import world.evgereo.articles.models.User;
+import world.evgereo.articles.repositories.ArticleRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
-public class ArticlesService {
-    private ArticlesRepository articlesRepository;
+@RequiredArgsConstructor
+public class ArticleService {
+    private final ArticleRepository articlesRepository;
 
-    public List<Articles> getArticles() {
+    public List<Article> getArticles() {
         return articlesRepository.findAll();
     }
 
-    public Articles getArticle(int id) {
-        Optional<Articles> article = articlesRepository.findById(id);
+    public Article getArticle(int id) {
+        Optional<Article> article = articlesRepository.findById(id);
         return article.orElse(null);
     }
 
-    public void updateArticle(Articles article, int id) {
-        Optional<Articles> optionalArticles = articlesRepository.findById(id);
+    public void updateArticle(Article article, int id) {
+        Optional<Article> optionalArticles = articlesRepository.findById(id);
         if (optionalArticles.isPresent()) {
-            Articles existingArticle = optionalArticles.get();
+            Article existingArticle = optionalArticles.get();
             existingArticle.setArticleName(article.getArticleName());
             existingArticle.setArticleText(article.getArticleText());
             articlesRepository.save(existingArticle);
         }
     }
 
-    public void createArticle(Articles article) {
+    public void createArticle(Article article) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Users currentUser = (Users) authentication.getPrincipal();
+        User currentUser = (User) authentication.getPrincipal();
         article.setAuthor(currentUser);
         articlesRepository.save(article);
     }

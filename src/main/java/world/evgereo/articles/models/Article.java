@@ -4,17 +4,19 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "articles")
-public class Articles {
+public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int articleId;
@@ -32,5 +34,5 @@ public class Articles {
     @ManyToOne
     @JoinColumn(name = "author_id", referencedColumnName = "user_id", nullable = false)
     @JsonManagedReference
-    private Users author;
+    private User author;
 }
