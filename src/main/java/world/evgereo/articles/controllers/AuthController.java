@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import world.evgereo.articles.DTO.AuthRequestDTO;
 import world.evgereo.articles.DTO.AuthResponseDTO;
 import world.evgereo.articles.DTO.RefreshRequestDTO;
-import world.evgereo.articles.errors.exceptions.AuthException;
 import world.evgereo.articles.services.AuthService;
 
 @Controller
