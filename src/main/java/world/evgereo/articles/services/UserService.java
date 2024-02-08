@@ -1,8 +1,7 @@
 package world.evgereo.articles.services;
 
-import org.springframework.beans.BeanUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,10 +24,12 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
     private final UserRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper mapper = new ModelMapper();
 
     public UserService(UserRepository usersRepository, @Lazy PasswordEncoder passwordEncoder) {
         this.usersRepository = usersRepository;
         this.passwordEncoder = passwordEncoder;
+        mapper.getConfiguration().setSkipNullEnabled(true);
     }
 
     public List<User> getUsers() {
@@ -53,28 +54,26 @@ public class UserService implements UserDetailsService {
             throw new PasswordMismatchException("Entered passwords don't match");
         }
         User user = new User();
-        BeanUtils.copyProperties(dto, user);
+        mapper.map(dto, user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(new Role(1, "ROLE_USER")));
         usersRepository.save(user);
         return user;
     }
 
-    @PreAuthorize("hasRole('ROLE_MODERATOR') or authentication.principal.userId == #id")
     public User updateUser(UpdateUserDTO updateUser, int id) {
         User user = getUserById(id);
         if (user != null) {
-            BeanUtils.copyProperties(user, updateUser);
+            mapper.map(updateUser, user);
             usersRepository.save(user);
             return user;
         }
         throw new UsernameNotFoundException("User with id " + id + " not found");
     }
 
-    @PreAuthorize("hasRole('ROLE_MODERATOR') or authentication.principal.userId == #id")
     public void deleteUser(int id) {
         usersRepository.deleteById(id);
-    }
+    } // delete refresh token
 
     public User loadUserByEmail(String email) {
         User user = this.getUserByEmail(email);

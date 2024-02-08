@@ -11,7 +11,6 @@ import world.evgereo.articles.models.User;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,16 +30,17 @@ public class JwtTokenUtils {
     private long refreshTime;
 
     public String generateAccessToken(User user) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("username", user.getUsername());
-        claims.put("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
-        return generateToken(claims, user, accessTime, accessKey);
+        return generateToken(Map.of(
+                "username", user.getUsername(),
+                "roles", user.getAuthorities()
+                                .stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .collect(Collectors.toList())),
+                user, accessTime, accessKey);
     }
 
     public String generateRefreshToken(User user) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("username", user.getUsername());
-        return generateToken(claims, user, refreshTime, refreshKey);
+        return generateToken(Map.of("username", user.getUsername()), user, refreshTime, refreshKey);
     }
 
     private String generateToken(Map<String, Object> extraClaims, User user, Long time, String key) {

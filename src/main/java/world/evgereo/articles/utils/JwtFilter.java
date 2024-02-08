@@ -8,6 +8,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtTokenUtils jwtTokenUtils;
 
@@ -33,12 +36,9 @@ public class JwtFilter extends OncePerRequestFilter {
             token = authHeader.substring(7);
             try {
                 email = jwtTokenUtils.getAccessEmail(token);
-            } catch (ExpiredJwtException ex) {
-                throw new AuthException("The access token has expired");
-            } catch (SignatureException ex) {
-                throw new AuthException("The signature of the provided token is incorrect");
-            } catch (MalformedJwtException ex) {
-                throw new AuthException("Provided token is incorrect");
+            } catch (ExpiredJwtException | SignatureException| MalformedJwtException ex) {
+                log.debug(ex.getMessage());
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
             }
         }
 

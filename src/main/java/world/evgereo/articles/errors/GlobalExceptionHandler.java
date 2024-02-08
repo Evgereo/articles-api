@@ -1,5 +1,6 @@
 package world.evgereo.articles.errors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,41 +18,48 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> validationErrorsHandler(MethodArgumentNotValidException ex) {
-        return new ResponseEntity<>(
+        return !ex.getFieldErrors().getFirst().getField().equals("refreshToken") ?
+                new ResponseEntity<>(
                 ex.getFieldErrors().stream().collect(Collectors.toMap(FieldError::getField, fieldError -> {
                     String message = fieldError.getDefaultMessage();
+                    log.debug(message);
                     return message != null ? message : "Default message doesn't exist";
-                })),
-                HttpStatus.BAD_REQUEST);
+                })), HttpStatus.BAD_REQUEST) :
+                new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<HashMap<String, String>> badAuthenticationHandler(BadCredentialsException ex) {
-        return new ResponseEntity<>(new HashMap<>(Map.of("message", ex.getMessage())), HttpStatus.UNAUTHORIZED);
+        log.debug(ex.getMessage());
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<HashMap<String, String>> authHandler(AuthException ex) {
-        System.out.println(ex.getMessage());
-        return new ResponseEntity<>(new HashMap<>(Map.of("message", ex.getMessage())), HttpStatus.UNAUTHORIZED);
+        log.debug(ex.getMessage());
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(DuplicateUserException.class)
     public ResponseEntity<HashMap<String, String>> duplicateUserHandler(DuplicateUserException ex) {
-        return new ResponseEntity<>(new HashMap<>(Map.of("message", ex.getMessage())), HttpStatus.BAD_REQUEST);
+        log.debug(ex.getMessage());
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PasswordMismatchException.class)
     public ResponseEntity<HashMap<String, String>> passwordMismatchHandler(PasswordMismatchException ex) {
-        return new ResponseEntity<>(new HashMap<>(Map.of("message", ex.getMessage())), HttpStatus.BAD_REQUEST);
+        log.debug(ex.getMessage());
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<HashMap<String, String>> userNotFoundHandler(UsernameNotFoundException ex) {
-        return new ResponseEntity<>(new HashMap<>(Map.of("message", ex.getMessage())), HttpStatus.BAD_REQUEST);
+        log.debug(ex.getMessage());
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

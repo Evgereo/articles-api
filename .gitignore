@@ -29,4 +29,3 @@ build/
 !**/src/test/**/build/
 
 #Application
-#*application.properties

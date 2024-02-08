@@ -1,6 +1,7 @@
 package world.evgereo.articles.services;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +30,7 @@ public class AuthService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("You have entered an incorrect email or password");
+            throw new BadCredentialsException("Incorrect email or password has been entered");
         }
         User user = usersService.loadUserByEmail(authRequest.getEmail());
         String accessToken = jwtTokenUtils.generateAccessToken(user);
@@ -42,10 +43,8 @@ public class AuthService {
         String email;
         try {
             email = jwtTokenUtils.getRefreshEmail(refreshRequest.getRefreshToken());
-        } catch (ExpiredJwtException ex) {
-            throw new AuthException("The refresh token has expired");
-        } catch (SignatureException ex) {
-            throw new AuthException("The signature of the provided token is incorrect");
+        } catch (ExpiredJwtException | SignatureException| MalformedJwtException ex) {
+            throw new AuthException(ex.getMessage());
         }
         String saveRefreshToken = map.get(email);
         if(saveRefreshToken != null && saveRefreshToken.equals(refreshRequest.getRefreshToken())) {
@@ -54,6 +53,9 @@ public class AuthService {
             String refreshToken = jwtTokenUtils.generateRefreshToken(user);
             map.put(user.getEmail(), refreshToken);
             return new AuthResponseDTO(accessToken, refreshToken);
+        } else if(saveRefreshToken != null) {
+            map.remove(email);
+            throw new AuthException("The token is authentic, but a new one was received");
         }
         throw new AuthException("Provided token is incorrect");
     }
