@@ -21,8 +21,6 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int articleId;
 
-    @NotBlank
-    @Size(min=2, max=300)
     private String articleName;
 
     private String articleText;

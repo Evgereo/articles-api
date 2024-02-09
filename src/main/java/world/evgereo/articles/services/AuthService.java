@@ -48,7 +48,7 @@ public class AuthService {
         }
         String saveRefreshToken = map.get(email);
         if(saveRefreshToken != null && saveRefreshToken.equals(refreshRequest.getRefreshToken())) {
-            User user = usersService.getUserByEmail(email);
+            User user = usersService.loadUserByEmail(email);
             String accessToken = jwtTokenUtils.generateAccessToken(user);
             String refreshToken = jwtTokenUtils.generateRefreshToken(user);
             map.put(user.getEmail(), refreshToken);

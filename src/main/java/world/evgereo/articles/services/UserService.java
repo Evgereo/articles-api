@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import world.evgereo.articles.DTO.RegistrationUserDTO;
 import world.evgereo.articles.DTO.UpdateUserDTO;
 import world.evgereo.articles.errors.exceptions.DuplicateUserException;
+import world.evgereo.articles.errors.exceptions.NotFoundException;
 import world.evgereo.articles.errors.exceptions.PasswordMismatchException;
 import world.evgereo.articles.models.Role;
 import world.evgereo.articles.models.User;
@@ -17,33 +18,53 @@ import world.evgereo.articles.repositories.UserRepository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ModelMapper mapper = new ModelMapper();
+    private final ModelMapper mapper;
 
-    public UserService(UserRepository usersRepository, @Lazy PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository usersRepository, @Lazy PasswordEncoder passwordEncoder, ModelMapper mapper) {
         this.usersRepository = usersRepository;
         this.passwordEncoder = passwordEncoder;
-        mapper.getConfiguration().setSkipNullEnabled(true);
+        this.mapper = mapper;
     }
 
     public List<User> getUsers() {
         return usersRepository.findAll();
     }
 
-    public User getUserById(int id) {
-        Optional<User> user = usersRepository.findById(id);
-        return user.orElse(null);
+    public User loadUserById(int id) {
+        User user = this.getUserById(id);
+        if (user != null) {
+            return user;
+        } else {
+            throw new NotFoundException("User with id " + id + " not found");
+        }
     }
 
-    public User getUserByEmail(String email) {
-        Optional<User> user = usersRepository.findUsersByEmail(email);
-        return user.orElse(null);
+    public User loadUserByEmail(String email) {
+        User user = this.getUserByEmail(email);
+        if (user != null) {
+            return user;
+        } else {
+            throw new UsernameNotFoundException("User with " + email + " not found");
+        }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) {
+        return loadUserByEmail(email);
+    }
+
+    private User getUserById(int id) {
+        return id != 0 ? usersRepository.findById(id).orElse(null) : null;
+    }
+
+    private User getUserByEmail(String email) {
+        return !email.isEmpty() ? usersRepository.findUsersByEmail(email).orElse(null) : null;
     }
 
     public User createUser(RegistrationUserDTO dto) {
@@ -62,35 +83,13 @@ public class UserService implements UserDetailsService {
     }
 
     public User updateUser(UpdateUserDTO updateUser, int id) {
-        User user = getUserById(id);
-        if (user != null) {
-            mapper.map(updateUser, user);
-            usersRepository.save(user);
-            return user;
-        }
-        throw new UsernameNotFoundException("User with id " + id + " not found");
+        User user = loadUserById(id);
+        mapper.map(updateUser, user);
+        usersRepository.save(user);
+        return user;
     }
-
+    // delete refresh token
     public void deleteUser(int id) {
         usersRepository.deleteById(id);
-    } // delete refresh token
-
-    public User loadUserByEmail(String email) {
-        User user = this.getUserByEmail(email);
-        if (user != null) {
-            return user;
-        } else {
-            throw new UsernameNotFoundException("User with " + email + " not found");
-        }
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String email) {
-        User user = this.getUserByEmail(email);
-        if (user != null) {
-            return user;
-        } else {
-            throw new UsernameNotFoundException("User with " + email + " not found");
-        }
     }
 }

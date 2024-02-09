@@ -17,31 +17,26 @@ import java.util.List;
 @RequestMapping(path = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = "http://localhost:8080")
 public class UserController {
-    private final UserService usersService;
+    private final UserService userService;
 
     @GetMapping()
     public ResponseEntity<List<User>> users(){
-        return new ResponseEntity<>(usersService.getUsers(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
     
     @GetMapping("/{id}")
     public ResponseEntity<User> user(@PathVariable("id") int id) {
-        User user = usersService.getUserById(id);
-        if (user != null) {
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(userService.loadUserById(id), HttpStatus.OK);
     }
 
     @PatchMapping(value = "/{id}", params = "edit", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> updateUser(@RequestBody @Valid UpdateUserDTO user, @PathVariable("id") int id) {
-        return new ResponseEntity<>(usersService.updateUser(user, id), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateUser(user, id), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}", params = "delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable("id") int id){
-        usersService.deleteUser(id);
+        userService.deleteUser(id);
     }
 }

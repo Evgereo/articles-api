@@ -1,76 +1,47 @@
 package world.evgereo.articles.controllers;
 
 import jakarta.validation.Valid;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import world.evgereo.articles.DTO.CreateUpdateArticleDTO;
 import world.evgereo.articles.models.Article;
 import world.evgereo.articles.services.ArticleService;
 
-@Controller
-@RequestMapping("/articles")
-public class ArticleController {
-    private final ArticleService articlesService;
+import java.util.List;
 
-    public ArticleController(ArticleService articlesService) {
-        this.articlesService = articlesService;
-    }
+@RestController
+@RequiredArgsConstructor
+@RequestMapping(value = "/articles", produces = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin(origins = "http://localhost:8080")
+public class ArticleController {
+    private final ArticleService articleService;
 
     @GetMapping()
-    public String articles(Model model){
-        model.addAttribute("articles", articlesService.getArticles());
-        return "/articles/articles";
+    public ResponseEntity<List<Article>> articles(){
+        return new ResponseEntity<>(articleService.getArticles(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public String article(Model model, @PathVariable("id") int id) {
-        Article article = articlesService.getArticle(id);
-        if (article != null) {
-            model.addAttribute("article", article);
-            return "articles/article";
-        } else {
-            return "notfound";
-        }
-    }
-
-
-    @GetMapping("{id}/edit")
-    public String editArticle(Model model, @PathVariable("id") int id) {
-        Article article = articlesService.getArticle(id);
-        if (article != null) {
-            model.addAttribute("article", article);
-            return "/articles/edit";
-        } else {
-            return "notfound";
-        }
-    }
-
-    // there may be errors
-    @PatchMapping("/{id}/edit")
-    public String updateUser(@ModelAttribute("article") Article article, @PathVariable("id") int id){
-        System.out.println(article);
-        articlesService.updateArticle(article, id);
-        return "redirect:/articles/{id}";
-    }
-
-    @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable("id") int id){
-        articlesService.deleteArticle(id);
-        return "redirect:/users";
-    }
-
-    @GetMapping("/new")
-    public String newUser(@ModelAttribute("article") Article article) {
-        return "articles/new";
+    public ResponseEntity<Article> article(@PathVariable("id") int id) {
+        return new ResponseEntity<>(articleService.loadArticleById(id), HttpStatus.OK);
     }
 
     @PostMapping("/new")
-    public String createArticle(@ModelAttribute("article") @Valid Article article, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "articles/new";
-        }
-        articlesService.createArticle(article);
-        return "redirect:/articles";
+    public ResponseEntity<Article> createArticle(@RequestBody @Valid CreateUpdateArticleDTO article) {
+        return new ResponseEntity<>(articleService.createArticle(article), HttpStatus.CREATED);
+    }
+
+    @PatchMapping(value = "{id}", params = "edit", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Article> editArticle(@RequestBody @Valid CreateUpdateArticleDTO article, @PathVariable("id") int id) {
+        return new ResponseEntity<>(articleService.updateArticle(article, id), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{id}", params = "delete")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable("id") int id){
+        articleService.deleteArticle(id);
     }
 }

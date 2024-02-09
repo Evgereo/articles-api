@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import world.evgereo.articles.errors.exceptions.AuthException;
 import world.evgereo.articles.errors.exceptions.DuplicateUserException;
 import world.evgereo.articles.errors.exceptions.PasswordMismatchException;
+import world.evgereo.articles.errors.exceptions.NotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,5 +62,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<HashMap<String, String>> userNotFoundHandler(UsernameNotFoundException ex) {
         log.debug(ex.getMessage());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<HashMap<String, String>> userNotFoundHandler(NotFoundException ex) {
+        log.debug(ex.getMessage());
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

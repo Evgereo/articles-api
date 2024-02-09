@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import world.evgereo.articles.security.ArticleAuthorizationManager;
 import world.evgereo.articles.security.UserAuthorizationManager;
 import world.evgereo.articles.services.UserService;
 import world.evgereo.articles.utils.JwtFilter;
@@ -28,7 +29,7 @@ import world.evgereo.articles.utils.JwtFilter;
 public class SecurityConfig {
     private final UserService usersService;
     private final UserAuthorizationManager usersAuthorizationManager;
-    // private final ArticlesAuthorizationManager articlesAuthorizationManager;
+    private final ArticleAuthorizationManager articlesAuthorizationManager;
     private final JwtFilter jwtFilter;
 
     @Bean
@@ -38,7 +39,8 @@ public class SecurityConfig {
                         .requestMatchers("/", "/auth/**", "/articles", "/registration").permitAll()
                         .requestMatchers(HttpMethod.PATCH,"/users/{id}").access(usersAuthorizationManager)
                         .requestMatchers(HttpMethod.DELETE,"/users/{id}").access(usersAuthorizationManager)
-                        //.requestMatchers("/articles/{id}/edit").access(articlesSecurity)
+                        .requestMatchers(HttpMethod.PATCH,"/articles/{id}").access(articlesAuthorizationManager)
+                        .requestMatchers(HttpMethod.DELETE,"/articles/{id}").access(articlesAuthorizationManager)
                         .anyRequest().authenticated())
                 .userDetailsService(usersService)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
