@@ -15,9 +15,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import world.evgereo.articles.security.ArticleAuthorizationManager;
+import world.evgereo.articles.security.AuthEntryPoint;
 import world.evgereo.articles.security.UserAuthorizationManager;
 import world.evgereo.articles.services.UserService;
 import world.evgereo.articles.utils.JwtFilter;
@@ -31,6 +32,7 @@ public class SecurityConfig {
     private final UserAuthorizationManager usersAuthorizationManager;
     private final ArticleAuthorizationManager articlesAuthorizationManager;
     private final JwtFilter jwtFilter;
+    private final RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -41,12 +43,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE,"/users/{id}").access(usersAuthorizationManager)
                         .requestMatchers(HttpMethod.PATCH,"/articles/{id}").access(articlesAuthorizationManager)
                         .requestMatchers(HttpMethod.DELETE,"/articles/{id}").access(articlesAuthorizationManager)
-                        .anyRequest().authenticated())
+                        .requestMatchers("/users/**", "/articles/**").authenticated())
                 .userDetailsService(usersService)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler((request, response, accessDeniedException) -> response.setStatus(HttpStatus.FORBIDDEN.value()))
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                        .authenticationEntryPoint(new AuthEntryPoint(requestMappingHandlerMapping)))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         http.csrf(AbstractHttpConfigurer::disable);
         return http.build();

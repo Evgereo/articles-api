@@ -47,15 +47,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateUserException.class)
-    public ResponseEntity<HashMap<String, String>> duplicateUserHandler(DuplicateUserException ex) {
+    public ResponseEntity<Map<String, String>> duplicateUserHandler(DuplicateUserException ex) {
         log.debug(ex.getMessage());
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(Map.of("message", ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PasswordMismatchException.class)
-    public ResponseEntity<HashMap<String, String>> passwordMismatchHandler(PasswordMismatchException ex) {
+    public ResponseEntity<Map<String, String>> passwordMismatchHandler(PasswordMismatchException ex) {
         log.debug(ex.getMessage());
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(Map.of("message", ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
