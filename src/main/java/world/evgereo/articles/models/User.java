@@ -23,8 +23,8 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
-    @Getter()
-    private String userName;
+    @Column(name = "user_name")
+    private String username;
 
     private String userSurname;
 
@@ -52,7 +52,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.userName;
+        return this.username;
     }
 
     @Override

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import world.evgereo.articles.DTO.CreateUpdateArticleDTO;
+import world.evgereo.articles.DTOs.CreateUpdateArticleDTO;
 import world.evgereo.articles.errors.exceptions.NotFoundException;
 import world.evgereo.articles.models.Article;
 import world.evgereo.articles.models.User;
@@ -15,11 +15,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
-    private final ArticleRepository articlesRepository;
+    private final ArticleRepository articleRepository;
     private final ModelMapper mapper;
 
     public List<Article> getArticles() {
-        return articlesRepository.findAll();
+        return articleRepository.findAll();
     }
 
     public Article loadArticleById(int id) {
@@ -36,13 +36,13 @@ public class ArticleService {
     }
 
     private Article getArticle(int id) {
-        return id != 0 ? articlesRepository.findById(id).orElse(null) : null;
+        return id != 0 ? articleRepository.findById(id).orElse(null) : null;
     }
 
     public Article updateArticle(CreateUpdateArticleDTO updateArticle, int id) {
         Article article = loadArticleById(id);
         mapper.map(updateArticle, article);
-        articlesRepository.save(article);
+        articleRepository.save(article);
         return article;
     }
 
@@ -50,11 +50,11 @@ public class ArticleService {
         Article article = new Article();
         article.setAuthor((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         mapper.map(createArticle, article);
-        articlesRepository.save(article);
+        articleRepository.save(article);
         return article;
     }
 
     public void deleteArticle(int id) {
-        articlesRepository.deleteById(id);
+        articleRepository.deleteById(id);
     }
 }

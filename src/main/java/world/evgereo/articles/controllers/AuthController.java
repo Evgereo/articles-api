@@ -9,9 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import world.evgereo.articles.DTO.AuthRequestDTO;
-import world.evgereo.articles.DTO.AuthResponseDTO;
-import world.evgereo.articles.DTO.RefreshRequestDTO;
+import world.evgereo.articles.DTOs.AuthRequestDTO;
+import world.evgereo.articles.DTOs.AuthResponseDTO;
+import world.evgereo.articles.DTOs.RefreshRequestDTO;
 import world.evgereo.articles.services.AuthService;
 
 @Controller

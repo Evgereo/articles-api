@@ -28,9 +28,9 @@ import world.evgereo.articles.utils.JwtFilter;
 @EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final UserService usersService;
-    private final UserAuthorizationManager usersAuthorizationManager;
-    private final ArticleAuthorizationManager articlesAuthorizationManager;
+    private final UserService userService;
+    private final UserAuthorizationManager userAuthorizationManager;
+    private final ArticleAuthorizationManager articleAuthorizationManager;
     private final JwtFilter jwtFilter;
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
 
@@ -39,12 +39,12 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/", "/auth/**", "/articles", "/registration").permitAll()
-                        .requestMatchers(HttpMethod.PATCH,"/users/{id}").access(usersAuthorizationManager)
-                        .requestMatchers(HttpMethod.DELETE,"/users/{id}").access(usersAuthorizationManager)
-                        .requestMatchers(HttpMethod.PATCH,"/articles/{id}").access(articlesAuthorizationManager)
-                        .requestMatchers(HttpMethod.DELETE,"/articles/{id}").access(articlesAuthorizationManager)
+                        .requestMatchers(HttpMethod.PATCH,"/users/{id}").access(userAuthorizationManager)
+                        .requestMatchers(HttpMethod.DELETE,"/users/{id}").access(userAuthorizationManager)
+                        .requestMatchers(HttpMethod.PATCH,"/articles/{id}").access(articleAuthorizationManager)
+                        .requestMatchers(HttpMethod.DELETE,"/articles/{id}").access(articleAuthorizationManager)
                         .requestMatchers("/users/**", "/articles/**").authenticated())
-                .userDetailsService(usersService)
+                .userDetailsService(userService)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler((request, response, accessDeniedException) -> response.setStatus(HttpStatus.FORBIDDEN.value()))

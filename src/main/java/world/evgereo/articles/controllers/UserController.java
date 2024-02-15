@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import world.evgereo.articles.DTO.UpdateUserDTO;
+import world.evgereo.articles.DTOs.UpdateUserDTO;
 import world.evgereo.articles.models.User;
 import world.evgereo.articles.services.UserService;
 
@@ -20,12 +20,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping()
-    public ResponseEntity<List<User>> users(){
+    public ResponseEntity<List<User>> getUsers(){
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<User> user(@PathVariable("id") int id) {
+    public ResponseEntity<User> getUser(@PathVariable("id") int id) {
         return new ResponseEntity<>(userService.loadUserById(id), HttpStatus.OK);
     }
 

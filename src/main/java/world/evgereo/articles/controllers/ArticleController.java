@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import world.evgereo.articles.DTO.CreateUpdateArticleDTO;
+import world.evgereo.articles.DTOs.CreateUpdateArticleDTO;
 import world.evgereo.articles.models.Article;
 import world.evgereo.articles.services.ArticleService;
 

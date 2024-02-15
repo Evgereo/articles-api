@@ -8,9 +8,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-import world.evgereo.articles.DTO.AuthRequestDTO;
-import world.evgereo.articles.DTO.AuthResponseDTO;
-import world.evgereo.articles.DTO.RefreshRequestDTO;
+import world.evgereo.articles.DTOs.AuthRequestDTO;
+import world.evgereo.articles.DTOs.AuthResponseDTO;
+import world.evgereo.articles.DTOs.RefreshRequestDTO;
 import world.evgereo.articles.errors.exceptions.AuthException;
 import world.evgereo.articles.models.RefreshToken;
 import world.evgereo.articles.models.User;
@@ -20,7 +20,7 @@ import world.evgereo.articles.utils.JwtTokenUtils;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final UserService usersService;
+    private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtils jwtTokenUtils;
     private final RefreshJwtRepository refreshJwtRepository;
@@ -31,7 +31,7 @@ public class AuthService {
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException("Incorrect email or password has been entered");
         }
-        User user = usersService.loadUserByEmail(authRequest.getEmail());
+        User user = userService.loadUserByEmail(authRequest.getEmail());
         String accessToken = jwtTokenUtils.generateAccessToken(user);
         String refreshToken = jwtTokenUtils.generateRefreshToken(user);
         setToken(user.getEmail(), refreshToken);
@@ -47,7 +47,7 @@ public class AuthService {
         }
         String saveRefreshToken = getTokenByEmail(email);
         if(saveRefreshToken != null && saveRefreshToken.equals(refreshRequest.getRefreshToken())) {
-            User user = usersService.loadUserByEmail(email);
+            User user = userService.loadUserByEmail(email);
             String accessToken = jwtTokenUtils.generateAccessToken(user);
             String refreshToken = jwtTokenUtils.generateRefreshToken(user);
             setToken(user.getEmail(), refreshToken);
@@ -68,7 +68,7 @@ public class AuthService {
         return tokenEntity != null ? tokenEntity.getRefreshToken() : null;
     }
 
-    private void deleteToken(String email) {
+    protected void deleteToken(String email) {
         refreshJwtRepository.deleteById(email);
     }
 }

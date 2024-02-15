@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import world.evgereo.articles.DTO.RegistrationUserDTO;
-import world.evgereo.articles.DTO.UpdateUserDTO;
+import world.evgereo.articles.DTOs.RegistrationUserDTO;
+import world.evgereo.articles.DTOs.UpdateUserDTO;
 import world.evgereo.articles.errors.exceptions.DuplicateUserException;
 import world.evgereo.articles.errors.exceptions.NotFoundException;
 import world.evgereo.articles.errors.exceptions.PasswordMismatchException;
@@ -22,18 +22,20 @@ import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
-    private final UserRepository usersRepository;
+    private final UserRepository userRepository;
+    private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper mapper;
 
-    public UserService(UserRepository usersRepository, @Lazy PasswordEncoder passwordEncoder, ModelMapper mapper) {
-        this.usersRepository = usersRepository;
+    public UserService(UserRepository userRepository, AuthService authService, @Lazy PasswordEncoder passwordEncoder, ModelMapper mapper) {
+        this.userRepository = userRepository;
+        this.authService = authService;
         this.passwordEncoder = passwordEncoder;
         this.mapper = mapper;
     }
 
     public List<User> getUsers() {
-        return usersRepository.findAll();
+        return userRepository.findAll();
     }
 
     public User loadUserById(int id) {
@@ -60,11 +62,11 @@ public class UserService implements UserDetailsService {
     }
 
     private User getUserById(int id) {
-        return id != 0 ? usersRepository.findById(id).orElse(null) : null;
+        return id != 0 ? userRepository.findById(id).orElse(null) : null;
     }
 
     private User getUserByEmail(String email) {
-        return !email.isEmpty() ? usersRepository.findUsersByEmail(email).orElse(null) : null;
+        return !email.isEmpty() ? userRepository.findUserByEmail(email).orElse(null) : null;
     }
 
     public User createUser(RegistrationUserDTO dto) {
@@ -78,18 +80,19 @@ public class UserService implements UserDetailsService {
         mapper.map(dto, user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(new Role(1, "ROLE_USER")));
-        usersRepository.save(user);
+        userRepository.save(user);
         return user;
     }
 
     public User updateUser(UpdateUserDTO updateUser, int id) {
         User user = loadUserById(id);
         mapper.map(updateUser, user);
-        usersRepository.save(user);
+        userRepository.save(user);
         return user;
     }
-    // delete refresh token
+
     public void deleteUser(int id) {
-        usersRepository.deleteById(id);
+        authService.deleteToken(loadUserById(id).getEmail());
+        userRepository.deleteById(id);
     }
 }

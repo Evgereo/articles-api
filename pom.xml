@@ -18,6 +18,8 @@
     <properties>
         <java.version>21</java.version>
         <snakeyaml.version>2.2</snakeyaml.version>
+        <spring.starter.version>3.2.2</spring.starter.version>
+        <jwt.version>0.12.3</jwt.version>
     </properties>
 
     <dependencies>
@@ -25,17 +27,19 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>3.2.2</version>
+            <version>${spring.starter.version}</version>
         </dependency>
         <!--Data-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${spring.starter.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+            <version>${spring.starter.version}</version>
         </dependency>
 
         <dependency>
@@ -53,44 +57,46 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-            <version>3.2.2</version>
+            <version>${spring.starter.version}</version>
         </dependency>
         <!--Security-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+            <version>${spring.starter.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
-            <version>0.12.3</version>
+            <version>${jwt.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
-            <version>0.12.3</version>
+            <version>${jwt.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
-            <version>0.12.3</version>
+            <version>${jwt.version}</version>
             <scope>runtime</scope>
         </dependency>
         <!--Tests-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring.starter.version}</version>
             <scope>test</scope>
         </dependency>
         <!--Develops-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <version>3.2.0</version>
+            <version>${spring.starter.version}</version>
         </dependency>
 
         <dependency>

@@ -1,4 +1,4 @@
-package world.evgereo.articles.DTO;
+package world.evgereo.articles.DTOs;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

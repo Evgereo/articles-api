@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> validationErrorsHandler(MethodArgumentNotValidException ex) {
         return !ex.getFieldErrors().getFirst().getField().equals("refreshToken") ?
