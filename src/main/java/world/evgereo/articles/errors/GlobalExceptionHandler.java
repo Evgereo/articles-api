@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import world.evgereo.articles.errors.exceptions.AuthException;
 import world.evgereo.articles.errors.exceptions.DuplicateUserException;
-import world.evgereo.articles.errors.exceptions.PasswordMismatchException;
 import world.evgereo.articles.errors.exceptions.NotFoundException;
+import world.evgereo.articles.errors.exceptions.PasswordMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;

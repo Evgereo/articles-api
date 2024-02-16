@@ -12,8 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import world.evgereo.articles.DTOs.UpdateUserDTO;
 import world.evgereo.articles.services.UserService;
-import world.evgereo.articles.utils.JwtFilter;
-import world.evgereo.articles.utils.JwtTokenUtils;
+import world.evgereo.articles.security.filters.JwtFilter;
+import world.evgereo.articles.security.utils.JwtTokenUtils;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;

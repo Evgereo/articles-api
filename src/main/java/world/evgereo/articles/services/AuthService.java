@@ -12,18 +12,16 @@ import world.evgereo.articles.DTOs.AuthRequestDTO;
 import world.evgereo.articles.DTOs.AuthResponseDTO;
 import world.evgereo.articles.DTOs.RefreshRequestDTO;
 import world.evgereo.articles.errors.exceptions.AuthException;
-import world.evgereo.articles.models.RefreshToken;
 import world.evgereo.articles.models.User;
-import world.evgereo.articles.repositories.RefreshJwtRepository;
-import world.evgereo.articles.utils.JwtTokenUtils;
+import world.evgereo.articles.security.utils.JwtTokenUtils;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
+    private final JwtTokenService jwtTokenService;
     private final JwtTokenUtils jwtTokenUtils;
-    private final RefreshJwtRepository refreshJwtRepository;
+    private final AuthenticationManager authenticationManager;
 
     public AuthResponseDTO createAuthTokens(AuthRequestDTO authRequest) {
         try {
@@ -34,7 +32,7 @@ public class AuthService {
         User user = userService.loadUserByEmail(authRequest.getEmail());
         String accessToken = jwtTokenUtils.generateAccessToken(user);
         String refreshToken = jwtTokenUtils.generateRefreshToken(user);
-        setToken(user.getEmail(), refreshToken);
+        jwtTokenService.setToken(user.getEmail(), refreshToken);
         return new AuthResponseDTO(accessToken, refreshToken);
     }
 
@@ -45,30 +43,17 @@ public class AuthService {
         } catch (ExpiredJwtException | SignatureException| MalformedJwtException ex) {
             throw new AuthException(ex.getMessage());
         }
-        String saveRefreshToken = getTokenByEmail(email);
+        String saveRefreshToken = jwtTokenService.getTokenByEmail(email);
         if(saveRefreshToken != null && saveRefreshToken.equals(refreshRequest.getRefreshToken())) {
             User user = userService.loadUserByEmail(email);
             String accessToken = jwtTokenUtils.generateAccessToken(user);
             String refreshToken = jwtTokenUtils.generateRefreshToken(user);
-            setToken(user.getEmail(), refreshToken);
+            jwtTokenService.setToken(user.getEmail(), refreshToken);
             return new AuthResponseDTO(accessToken, refreshToken);
         } else if(saveRefreshToken != null) {
-            deleteToken(email);
+            jwtTokenService.deleteToken(email);
             throw new AuthException("The token is authentic, but a new one was received");
         }
         throw new AuthException("Provided token is incorrect");
-    }
-
-    private void setToken(String email, String refreshToken) {
-        refreshJwtRepository.save(new RefreshToken(email, refreshToken));
-    }
-
-    private String getTokenByEmail(String email) {
-        RefreshToken tokenEntity = refreshJwtRepository.findById(email).orElse(null);
-        return tokenEntity != null ? tokenEntity.getRefreshToken() : null;
-    }
-
-    protected void deleteToken(String email) {
-        refreshJwtRepository.deleteById(email);
     }
 }

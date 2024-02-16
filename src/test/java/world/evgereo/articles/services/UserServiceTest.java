@@ -26,7 +26,7 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
-    private AuthService authService;
+    private JwtTokenService jwtTokenService;
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
@@ -94,7 +94,7 @@ public class UserServiceTest {
     void deleteUser() {
         when(userRepository.findById(1)).thenReturn(Optional.ofNullable(getFirstUser()));
         userService.deleteUser(1);
-        verify(authService, times(1)).deleteToken("testfirst@gmail.com");
+        verify(jwtTokenService, times(1)).deleteToken("testfirst@gmail.com");
         verify(userRepository, times(1)).deleteById(1);
     }
 }

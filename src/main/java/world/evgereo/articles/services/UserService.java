@@ -1,7 +1,7 @@
 package world.evgereo.articles.services;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,18 +21,12 @@ import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
-    private final AuthService authService;
+    private final JwtTokenService jwtTokenService;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper mapper;
-
-    public UserService(UserRepository userRepository, AuthService authService, @Lazy PasswordEncoder passwordEncoder, ModelMapper mapper) {
-        this.userRepository = userRepository;
-        this.authService = authService;
-        this.passwordEncoder = passwordEncoder;
-        this.mapper = mapper;
-    }
 
     public List<User> getUsers() {
         return userRepository.findAll();
@@ -92,7 +86,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void deleteUser(int id) {
-        authService.deleteToken(loadUserById(id).getEmail());
+        jwtTokenService.deleteToken(loadUserById(id).getEmail());
         userRepository.deleteById(id);
     }
 }
