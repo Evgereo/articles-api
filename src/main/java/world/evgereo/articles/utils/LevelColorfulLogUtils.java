@@ -1,11 +1,11 @@
-package world.evgereo.articles.configs;
+package world.evgereo.articles.utils;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.pattern.color.ANSIConstants;
 import ch.qos.logback.core.pattern.color.ForegroundCompositeConverterBase;
 
-public class LevelColorfulLogConfig extends ForegroundCompositeConverterBase<ILoggingEvent> {
+public class LevelColorfulLogUtils extends ForegroundCompositeConverterBase<ILoggingEvent> {
 
     @Override
     protected String getForegroundColorCode(ILoggingEvent event) {

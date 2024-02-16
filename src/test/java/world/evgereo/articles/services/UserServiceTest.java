@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import world.evgereo.articles.errors.exceptions.DuplicateUserException;
@@ -13,6 +12,7 @@ import world.evgereo.articles.errors.exceptions.NotFoundException;
 import world.evgereo.articles.errors.exceptions.PasswordMismatchException;
 import world.evgereo.articles.models.User;
 import world.evgereo.articles.repositories.UserRepository;
+import world.evgereo.articles.utils.MapperUtils;
 
 import java.util.Optional;
 
@@ -30,7 +30,7 @@ public class UserServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
-    private ModelMapper mapper;
+    private MapperUtils mapper;
     @InjectMocks
     private UserService userService;
 

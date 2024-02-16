@@ -1,7 +1,6 @@
 package world.evgereo.articles.services;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import world.evgereo.articles.DTOs.CreateUpdateArticleDTO;
@@ -9,6 +8,7 @@ import world.evgereo.articles.errors.exceptions.NotFoundException;
 import world.evgereo.articles.models.Article;
 import world.evgereo.articles.models.User;
 import world.evgereo.articles.repositories.ArticleRepository;
+import world.evgereo.articles.utils.MapperUtils;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
-    private final ModelMapper mapper;
+    private final MapperUtils mapper;
 
     public List<Article> getArticles() {
         return articleRepository.findAll();

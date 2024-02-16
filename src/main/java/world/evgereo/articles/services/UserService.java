@@ -1,7 +1,6 @@
 package world.evgereo.articles.services;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +14,7 @@ import world.evgereo.articles.errors.exceptions.PasswordMismatchException;
 import world.evgereo.articles.models.Role;
 import world.evgereo.articles.models.User;
 import world.evgereo.articles.repositories.UserRepository;
+import world.evgereo.articles.utils.MapperUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +26,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final JwtTokenService jwtTokenService;
     private final PasswordEncoder passwordEncoder;
-    private final ModelMapper mapper;
+    private final MapperUtils mapper;
 
     public List<User> getUsers() {
         return userRepository.findAll();

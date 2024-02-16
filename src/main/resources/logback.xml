@@ -1,5 +1,5 @@
 <configuration level="warn">
-    <conversionRule conversionWord="clr" converterClass="world.evgereo.articles.configs.LevelColorfulLogConfig"/>
+    <conversionRule conversionWord="clr" converterClass="world.evgereo.articles.utils.LevelColorfulLogUtils"/>
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender" level="warn">
         <encoder>
             <pattern>%cyan(%d{YY-MM-dd HH:mm:ss.SSS}) %clr(%-5level) %file line:%line [%magenta(%logger{36})] : %msg%n</pattern>
