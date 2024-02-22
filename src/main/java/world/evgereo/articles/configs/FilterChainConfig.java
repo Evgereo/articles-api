@@ -49,3 +49,4 @@ public class FilterChainConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
+}
