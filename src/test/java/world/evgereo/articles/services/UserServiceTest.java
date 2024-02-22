@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 import static world.evgereo.articles.mockfactories.UserMockFactory.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock

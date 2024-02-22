@@ -32,12 +32,12 @@ public class JwtFilter extends OncePerRequestFilter {
         String email = null;
         String token = null;
 
-        if(authHeader != null && authHeader.startsWith("Bearer ")){
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
             try {
                 email = jwtTokenUtils.getAccessEmail(token);
-            } catch (ExpiredJwtException | SignatureException| MalformedJwtException ex) {
-                log.debug(ex.getMessage());
+            } catch (ExpiredJwtException | SignatureException | MalformedJwtException ex) {
+                JwtFilter.log.debug(ex.getMessage());
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
             }
         }
@@ -46,7 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     email,
                     null,
-                   jwtTokenUtils.getRoles(token).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
+                    jwtTokenUtils.getRoles(token).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
             );
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }

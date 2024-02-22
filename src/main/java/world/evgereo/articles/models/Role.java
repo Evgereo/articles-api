@@ -20,11 +20,11 @@ public class Role implements GrantedAuthority {
     private int roleId;
 
     @Column(name = "role_name")
-    @Size(min=2, max=20)
+    @Size(min = 2, max = 20)
     private String authority;
 
     @Override
     public String getAuthority() {
-        return this.authority;
+        return authority;
     }
 }

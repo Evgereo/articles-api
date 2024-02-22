@@ -35,10 +35,10 @@ public class FilterChainConfig {
         http
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/", "/auth/**", "/articles", "/registration").permitAll()
-                        .requestMatchers(HttpMethod.PATCH,"/users/{id}").access(userAuthorizationManager)
-                        .requestMatchers(HttpMethod.DELETE,"/users/{id}").access(userAuthorizationManager)
-                        .requestMatchers(HttpMethod.PATCH,"/articles/{id}").access(articleAuthorizationManager)
-                        .requestMatchers(HttpMethod.DELETE,"/articles/{id}").access(articleAuthorizationManager)
+                        .requestMatchers(HttpMethod.PATCH, "/users/{id}").access(userAuthorizationManager)
+                        .requestMatchers(HttpMethod.DELETE, "/users/{id}").access(userAuthorizationManager)
+                        .requestMatchers(HttpMethod.PATCH, "/articles/{id}").access(articleAuthorizationManager)
+                        .requestMatchers(HttpMethod.DELETE, "/articles/{id}").access(articleAuthorizationManager)
                         .requestMatchers("/users/**", "/articles/**").authenticated())
                 .userDetailsService(userService)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -49,4 +49,3 @@ public class FilterChainConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
-}

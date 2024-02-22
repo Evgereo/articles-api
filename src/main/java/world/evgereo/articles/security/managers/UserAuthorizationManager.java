@@ -21,11 +21,11 @@ public class UserAuthorizationManager implements AuthorizationManager<RequestAut
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext context) {
         Authentication auth = authentication.get();
         boolean isCurrentUserPage = userService.loadUserByEmail((String) auth.getPrincipal()).getUserId()
-                == Integer.parseInt(context.getVariables().get("id"));;
-        log.debug("Is user page of current user page: {}", isCurrentUserPage);
+                == Integer.parseInt(context.getVariables().get("id"));
+        UserAuthorizationManager.log.debug("Is user page of current user page: {}", isCurrentUserPage);
         return new AuthorizationDecision(
                 isCurrentUserPage ||
                         auth.getAuthorities().stream().anyMatch(role ->
-                        role.getAuthority().equals("ROLE_MODERATOR")));
+                                role.getAuthority().equals("ROLE_MODERATOR")));
     }
 }

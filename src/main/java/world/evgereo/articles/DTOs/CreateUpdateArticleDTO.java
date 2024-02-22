@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CreateUpdateArticleDTO {
     @NotBlank(message = "Article name should be not empty")
-    @Size(min=2, max=300, message = "Article name should be between 2 and 300")
+    @Size(min = 2, max = 300, message = "Article name should be between 2 and 300")
     private String articleName;
 
     private String articleText;

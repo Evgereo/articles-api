@@ -15,10 +15,10 @@ import lombok.Setter;
 public class AuthRequestDTO {
     @NotBlank(message = "Email should be not empty")
     @Email(message = "Please provide a valid email address")
-    @Size(max=150, message = "Maximum size of email is 150")
+    @Size(max = 150, message = "Maximum size of email is 150")
     private String email;
 
     @NotBlank(message = "Password should be not empty")
-    @Size(min=2, max=100, message = "Size of your password too short or long")
+    @Size(min = 2, max = 100, message = "Size of your password too short or long")
     private String password;
 }

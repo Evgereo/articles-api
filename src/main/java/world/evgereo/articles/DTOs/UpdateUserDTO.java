@@ -13,16 +13,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateUserDTO {
-    @Size(min=2, max=100, message = "Size of your name too short or long")
+    @Size(min = 2, max = 100, message = "Size of your name too short or long")
     private String username;
 
-    @Size(min=2, max=100, message = "Size of your surname too short or long")
+    @Size(min = 2, max = 100, message = "Size of your surname too short or long")
     private String userSurname;
 
     @Min(3)
     private int age;
 
     @Email(message = "Please provide a valid email address")
-    @Size(max=150, message = "Maximum size of email is 150")
+    @Size(max = 150, message = "Maximum size of email is 150")
     private String email;
 }

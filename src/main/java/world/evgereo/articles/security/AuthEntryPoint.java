@@ -22,28 +22,26 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) {
-        if (response.getStatus() == HttpStatus.UNAUTHORIZED.value() && this.isNotEndpointPathExist(request)) {
+        if (response.getStatus() == HttpStatus.UNAUTHORIZED.value() && isNotEndpointPathExist(request))
             response.setStatus(HttpStatus.NOT_FOUND.value());
-        } else {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        }
+        else response.setStatus(HttpStatus.UNAUTHORIZED.value());
     }
 
     private boolean isNotEndpointPathExist(HttpServletRequest request) {
         Map<RequestMappingInfo, HandlerMethod> handlerMethods = requestMappingHandlerMapping.getHandlerMethods();
         for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethods.entrySet()) {
             RequestMappingInfo mappingInfo = entry.getKey();
-            log.trace("Exist pattern: {} and request pattern: {}", mappingInfo.getPatternValues(), request.getRequestURI());
+            AuthEntryPoint.log.trace("Exist pattern: {} and request pattern: {}", mappingInfo.getPatternValues(), request.getRequestURI());
             if (mappingInfo.getPatternValues().contains(request.getRequestURI()) &&
                     (!request.getParameterNames().hasMoreElements() ||
                             mappingInfo.getParamsCondition().getExpressions().stream()
                                     .map(String::valueOf)
                                     .anyMatch(paramName -> Collections.list(request.getParameterNames()).stream().anyMatch(paramName::equals)))) {
-                log.debug("Pattern {} exist", request.getRequestURI());
+                AuthEntryPoint.log.debug("Pattern {} exist", request.getRequestURI());
                 return false;
             }
         }
-        log.debug("Pattern {} don't exist", request.getRequestURI());
+        AuthEntryPoint.log.debug("Pattern {} don't exist", request.getRequestURI());
         return true;
     }
 }

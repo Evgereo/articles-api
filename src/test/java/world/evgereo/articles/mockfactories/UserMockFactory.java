@@ -64,7 +64,7 @@ public class UserMockFactory {
     }
 
     public static List<User> getListOfTwoUsers() {
-        return List.of(firstUser, fourthUser);
+        return List.of(UserMockFactory.firstUser, UserMockFactory.fourthUser);
     }
 
     public static RegistrationUserDTO getValidRegistrationUserDTO() {
@@ -79,7 +79,7 @@ public class UserMockFactory {
     }
 
     public static RegistrationUserDTO getInvalidRegistrationUserDTO() {
-        RegistrationUserDTO dto = getValidRegistrationUserDTO();
+        RegistrationUserDTO dto = UserMockFactory.getValidRegistrationUserDTO();
         dto.setPasswordConfirm("notpassword");
         return dto;
     }

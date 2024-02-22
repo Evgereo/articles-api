@@ -20,7 +20,7 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @GetMapping()
-    public ResponseEntity<List<Article>> articles(){
+    public ResponseEntity<List<Article>> articles() {
         return new ResponseEntity<>(articleService.getArticles(), HttpStatus.OK);
     }
 
@@ -41,7 +41,7 @@ public class ArticleController {
 
     @DeleteMapping(value = "/{id}", params = "delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable("id") int id){
+    public void deleteUser(@PathVariable("id") int id) {
         articleService.deleteArticle(id);
     }
 }

@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository;
 import world.evgereo.articles.models.Article;
 
 @Repository
-public interface ArticleRepository extends JpaRepository<Article, Integer> {}
+public interface ArticleRepository extends JpaRepository<Article, Integer> {
+}

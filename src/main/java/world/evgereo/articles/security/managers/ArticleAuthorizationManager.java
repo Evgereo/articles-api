@@ -25,7 +25,7 @@ public class ArticleAuthorizationManager implements AuthorizationManager<Request
         int articleId = Integer.parseInt(context.getVariables().get("id"));
         boolean isCurrentUserArticle = userService.loadUserByEmail((String) auth.getPrincipal()).getUserId()
                 == articleService.loadArticleAuthorById(articleId).getUserId();
-        log.debug("Is user page of current user article: {}", isCurrentUserArticle);
+        ArticleAuthorizationManager.log.debug("Is user page of current user article: {}", isCurrentUserArticle);
         return new AuthorizationDecision(
                 isCurrentUserArticle ||
                         auth.getAuthorities().stream().anyMatch(role ->

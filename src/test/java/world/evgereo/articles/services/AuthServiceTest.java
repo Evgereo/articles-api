@@ -20,7 +20,7 @@ import static world.evgereo.articles.mockfactories.AuthMockFactory.*;
 import static world.evgereo.articles.mockfactories.UserMockFactory.getFirstUser;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthServiceTest {
+class AuthServiceTest {
     @Mock
     private UserService userService;
     @Mock

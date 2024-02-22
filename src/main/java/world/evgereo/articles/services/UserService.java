@@ -33,21 +33,15 @@ public class UserService implements UserDetailsService {
     }
 
     public User loadUserById(int id) {
-        User user = this.getUserById(id);
-        if (user != null) {
-            return user;
-        } else {
-            throw new NotFoundException("User with id " + id + " not found");
-        }
+        User user = getUserById(id);
+        if (user != null) return user;
+        else throw new NotFoundException("User with id " + id + " not found");
     }
 
     public User loadUserByEmail(String email) {
-        User user = this.getUserByEmail(email);
-        if (user != null) {
-            return user;
-        } else {
-            throw new UsernameNotFoundException("User with " + email + " not found");
-        }
+        User user = getUserByEmail(email);
+        if (user != null) return user;
+        else throw new UsernameNotFoundException("User with " + email + " not found");
     }
 
     @Override
@@ -64,12 +58,10 @@ public class UserService implements UserDetailsService {
     }
 
     public User createUser(RegistrationUserDTO dto) {
-        if(this.getUserByEmail(dto.getEmail()) != null) {
+        if (getUserByEmail(dto.getEmail()) != null)
             throw new DuplicateUserException("A user with the email " + dto.getEmail() + " already exists");
-        }
-        if(!dto.getPassword().equals(dto.getPasswordConfirm())) {
+        if (!dto.getPassword().equals(dto.getPasswordConfirm()))
             throw new PasswordMismatchException("Entered passwords don't match");
-        }
         User user = new User();
         mapper.map(dto, user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));

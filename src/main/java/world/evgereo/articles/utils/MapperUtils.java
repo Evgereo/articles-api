@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 public class MapperUtils extends ModelMapper {
     public MapperUtils() {
         super();
-        this.getConfiguration().setSkipNullEnabled(true);
+        getConfiguration().setSkipNullEnabled(true);
     }
 }

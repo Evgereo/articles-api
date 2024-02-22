@@ -11,9 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import world.evgereo.articles.DTOs.UpdateUserDTO;
-import world.evgereo.articles.services.UserService;
 import world.evgereo.articles.security.filters.JwtFilter;
 import world.evgereo.articles.security.utils.JwtTokenUtils;
+import world.evgereo.articles.services.UserService;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
@@ -25,9 +25,9 @@ import static world.evgereo.articles.mockfactories.UserMockFactory.*;
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
     @Mock
-    private UserService userService;
-    @Mock
     JwtTokenUtils jwtTokenUtils;
+    @Mock
+    private UserService userService;
     @InjectMocks
     private UserController userController;
 
@@ -35,7 +35,7 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(userController)
                 .addFilters(new JwtFilter(jwtTokenUtils))
                 .build();
@@ -44,11 +44,11 @@ class UserControllerTest {
 
     @Test
     void getUsers() throws Exception {
-    when(userService.getUsers()).thenReturn(getListOfTwoUsers());
-    mockMvc.perform(get("/users"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(2)));
-    verify(userService, times(1)).getUsers();
+        when(userService.getUsers()).thenReturn(getListOfTwoUsers());
+        mockMvc.perform(get("/users"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+        verify(userService, times(1)).getUsers();
     }
 
     @Test
@@ -65,8 +65,8 @@ class UserControllerTest {
         when(userService.updateUser(any(UpdateUserDTO.class), eq(1))).thenReturn(getFirstUser());
         String userJson = objectMapper.writeValueAsString(getUpdateUserDTO());
         mockMvc.perform(patch("/users/{id}?edit", 1)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .content(userJson))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(userJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId").value(1));
         verify(userService, times(1)).updateUser(any(UpdateUserDTO.class), eq(1));

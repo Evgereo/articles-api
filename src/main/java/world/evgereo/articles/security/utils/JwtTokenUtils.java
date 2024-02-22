@@ -29,10 +29,32 @@ public class JwtTokenUtils {
     @Value("${token.signing.time.refresh}")
     private long refreshTime;
 
+    private static SecretKey getSecretKey(String key) {
+        byte[] keyBytes = Decoders.BASE64.decode(key);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private static String generateToken(Map<String, Object> extraClaims, User user, Long time, String key) {
+        return Jwts.builder()
+                .claims(extraClaims)
+                .subject(user.getEmail())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + time))
+                .signWith(JwtTokenUtils.getSecretKey(key)).compact();
+    }
+
+    private static Claims getAllClaims(String token, String key) {
+        return Jwts.parser()
+                .verifyWith(JwtTokenUtils.getSecretKey(key))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
     public String generateAccessToken(User user) {
-        return generateToken(Map.of(
-                "username", user.getUsername(),
-                "roles", user.getAuthorities()
+        return JwtTokenUtils.generateToken(Map.of(
+                        "username", user.getUsername(),
+                        "roles", user.getAuthorities()
                                 .stream()
                                 .map(GrantedAuthority::getAuthority)
                                 .collect(Collectors.toList())),
@@ -40,40 +62,19 @@ public class JwtTokenUtils {
     }
 
     public String generateRefreshToken(User user) {
-        return generateToken(Map.of("username", user.getUsername()), user, refreshTime, refreshKey);
-    }
-
-    private String generateToken(Map<String, Object> extraClaims, User user, Long time, String key) {
-        return Jwts.builder()
-                .claims(extraClaims)
-                .subject(user.getEmail())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + time))
-                .signWith(getSecretKey(key)).compact();
+        return JwtTokenUtils.generateToken(Map.of("username", user.getUsername()), user, refreshTime, refreshKey);
     }
 
     public String getAccessEmail(String token) {
-        return getAllClaims(token, accessKey).getSubject();
+        return JwtTokenUtils.getAllClaims(token, accessKey).getSubject();
     }
 
     public String getRefreshEmail(String token) {
-        return getAllClaims(token, refreshKey).getSubject();
+        return JwtTokenUtils.getAllClaims(token, refreshKey).getSubject();
     }
 
     @SuppressWarnings("unchecked")
     public List<String> getRoles(String token) {
-        return (List<String>) getAllClaims(token, accessKey).get("roles", List.class);
-    }
-
-    private Claims getAllClaims(String token, String key) {
-        return Jwts.parser()
-                .verifyWith(getSecretKey(key))
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-    }
-    private SecretKey getSecretKey(String key) {
-        byte[] keyBytes = Decoders.BASE64.decode(key);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return (List<String>) JwtTokenUtils.getAllClaims(token, accessKey).get("roles", List.class);
     }
 }

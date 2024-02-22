@@ -25,47 +25,47 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> validationErrorsHandler(MethodArgumentNotValidException ex) {
         return !ex.getFieldErrors().getFirst().getField().equals("refreshToken") ?
                 new ResponseEntity<>(
-                ex.getFieldErrors().stream().collect(Collectors.toMap(FieldError::getField, fieldError -> {
-                    String message = fieldError.getDefaultMessage();
-                    log.debug(message);
-                    return message != null ? message : "Default message doesn't exist";
-                })), HttpStatus.BAD_REQUEST) :
+                        ex.getFieldErrors().stream().collect(Collectors.toMap(FieldError::getField, fieldError -> {
+                            String message = fieldError.getDefaultMessage();
+                            GlobalExceptionHandler.log.debug(message);
+                            return message != null ? message : "Default message doesn't exist";
+                        })), HttpStatus.BAD_REQUEST) :
                 new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<HashMap<String, String>> badAuthenticationHandler(BadCredentialsException ex) {
-        log.debug(ex.getMessage());
+        GlobalExceptionHandler.log.debug(ex.getMessage());
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<HashMap<String, String>> authHandler(AuthException ex) {
-        log.debug(ex.getMessage());
+        GlobalExceptionHandler.log.debug(ex.getMessage());
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(DuplicateUserException.class)
     public ResponseEntity<Map<String, String>> duplicateUserHandler(DuplicateUserException ex) {
-        log.debug(ex.getMessage());
+        GlobalExceptionHandler.log.debug(ex.getMessage());
         return new ResponseEntity<>(Map.of("message", ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PasswordMismatchException.class)
     public ResponseEntity<Map<String, String>> passwordMismatchHandler(PasswordMismatchException ex) {
-        log.debug(ex.getMessage());
+        GlobalExceptionHandler.log.debug(ex.getMessage());
         return new ResponseEntity<>(Map.of("message", ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<HashMap<String, String>> userNotFoundHandler(UsernameNotFoundException ex) {
-        log.debug(ex.getMessage());
+        GlobalExceptionHandler.log.debug(ex.getMessage());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<HashMap<String, String>> userNotFoundHandler(NotFoundException ex) {
-        log.debug(ex.getMessage());
+        GlobalExceptionHandler.log.debug(ex.getMessage());
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

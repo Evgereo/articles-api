@@ -24,11 +24,8 @@ public class ArticleService {
 
     public Article loadArticleById(int id) {
         Article article = getArticle(id);
-        if (article != null) {
-            return article;
-        } else {
-            throw new NotFoundException("Article with id " + id + " not found");
-        }
+        if (article != null) return article;
+        else throw new NotFoundException("Article with id " + id + " not found");
     }
 
     public User loadArticleAuthorById(int id) {

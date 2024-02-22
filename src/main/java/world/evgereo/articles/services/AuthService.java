@@ -26,7 +26,7 @@ public class AuthService {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
         } catch (RuntimeException ex) {
-            log.debug(ex.getMessage());
+            AuthService.log.debug(ex.getMessage());
             throw new BadCredentialsException("Incorrect email or password has been entered");
         }
         return generateTokens(authRequest.getEmail());
@@ -40,9 +40,9 @@ public class AuthService {
             throw new AuthException(ex.getMessage());
         }
         String saveRefreshToken = jwtTokenService.getTokenByEmail(email);
-        if(saveRefreshToken != null && saveRefreshToken.equals(refreshRequest.getRefreshToken())) {
+        if (saveRefreshToken != null && saveRefreshToken.equals(refreshRequest.getRefreshToken()))
             return generateTokens(email);
-        } else if(saveRefreshToken != null) {
+        else if (saveRefreshToken != null) {
             jwtTokenService.deleteToken(email);
             throw new AuthException("The token is authentic, but a new one was received");
         }

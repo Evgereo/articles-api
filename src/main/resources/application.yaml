@@ -4,7 +4,8 @@ spring:
       host: 127.0.0.1
       port: 6379
   datasource:
-    url: jdbc:postgresql://localhost:5432/articles?stringtype=unspecified&user=postgres&password=root
+    url: jdbc:postgresql://192.168.1.104/articles?stringtype=unspecified&user=postgres&password=root #(for wsl)
+    #jdbc:postgresql://127.0.0.1:5432/articles?stringtype=unspecified&user=postgres&password=root (for windows)
   jpa:
     show-sql: true
     open-in-view: true

@@ -20,10 +20,10 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping()
-    public ResponseEntity<List<User>> getUsers(){
+    public ResponseEntity<List<User>> getUsers() {
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
-    
+
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable("id") int id) {
         return new ResponseEntity<>(userService.loadUserById(id), HttpStatus.OK);
@@ -36,7 +36,7 @@ public class UserController {
 
     @DeleteMapping(value = "/{id}", params = "delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable("id") int id){
+    public void deleteUser(@PathVariable("id") int id) {
         userService.deleteUser(id);
     }
 }

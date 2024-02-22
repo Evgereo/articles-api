@@ -15,11 +15,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RegistrationUserDTO {
     @NotBlank(message = "Name should be not empty or blank")
-    @Size(min=2, max=100, message = "Size of your name too short or long")
+    @Size(min = 2, max = 100, message = "Size of your name too short or long")
     private String username;
 
     @NotBlank(message = "Surname should be not empty or blank")
-    @Size(min=2, max=100, message = "Size of your surname too short or long")
+    @Size(min = 2, max = 100, message = "Size of your surname too short or long")
     private String userSurname;
 
     @Min(3)
@@ -27,14 +27,14 @@ public class RegistrationUserDTO {
 
     @NotBlank(message = "Email should be not empty")
     @Email(message = "Please provide a valid email address")
-    @Size(max=150, message = "Maximum size of email is 150")
+    @Size(max = 150, message = "Maximum size of email is 150")
     private String email;
 
     @NotBlank(message = "Password should be not empty")
-    @Size(min=2, max=100, message = "Size of your password too short or long")
+    @Size(min = 2, max = 100, message = "Size of your password too short or long")
     private String password;
 
     @NotBlank(message = "Password should be not empty")
-    @Size(min=2, max=100, message = "Size of your password too short or long")
+    @Size(min = 2, max = 100, message = "Size of your password too short or long")
     private String passwordConfirm;
 }

@@ -1,5 +1,6 @@
 package world.evgereo.articles.mockfactories;
 
+import world.evgereo.articles.DTOs.CreateUpdateArticleDTO;
 import world.evgereo.articles.models.Article;
 
 import static world.evgereo.articles.mockfactories.UserMockFactory.getFirstUser;
@@ -16,5 +17,12 @@ public class ArticleMockFactory {
 
     public static Article getFirstArticle() {
         return ArticleMockFactory.firstArticle;
+    }
+
+    public static CreateUpdateArticleDTO getCreateUpdateArticleDTO() {
+        return new CreateUpdateArticleDTO(
+                "name",
+                "some text"
+        );
     }
 }
