@@ -1,7 +1,7 @@
 spring:
   data:
     redis:
-      host: 127.0.0.1
+      host: redis
       port: 6379
   datasource:
     url: jdbc:postgresql://192.168.1.104/articles?stringtype=unspecified&user=postgres&password=root #(for wsl)

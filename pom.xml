@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>world.evgereo.articles</groupId>
-    <artifactId>articles-API</artifactId>
+    <artifactId>articles-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>articles-API</name>
     <description>articles-API</description>
