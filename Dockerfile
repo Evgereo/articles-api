@@ -1,8 +1,9 @@
 FROM openjdk:21
 
-LABEL authors="evgereo"
+LABEL author = "evgereo"
 
 COPY target/articles-api-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY src/main/resources/db /app/db/migration
 
 WORKDIR /app
 

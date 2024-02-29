@@ -1,8 +1,7 @@
 # articles-api
 
-Nothing interesting. I just started using git and continue to learn Spring)
-I know this code is the worst:)
-Use the terminal command to add roles:
+Nothing interesting. I just started using git and continue to learn Spring and some else technologies
+I know this code is not great, but it is not bad too, in my opinion:)
 
-1) psql -h localhost -p 1111 -d articles -U postgres
-2) insert into roles (role_name) values ('ROLE_USER'), ('ROLE_ADMIN'), ('ROLE_MODER'), ('ROLE_OWNER');
+To raise the api using docker compose, use the "docker compose up --build" command and all the necessary api containers
+will be started and configured by themselves
