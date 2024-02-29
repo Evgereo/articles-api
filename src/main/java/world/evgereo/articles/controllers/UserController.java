@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PatchMapping(value = "/{id}", params = "edit", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> updateUser(@RequestBody @Valid UpdateUserDTO user, @PathVariable("id") int id) {
+    public ResponseEntity<User> editUser(@RequestBody @Valid UpdateUserDTO user, @PathVariable("id") int id) {
         return new ResponseEntity<>(userService.updateUser(user, id), HttpStatus.OK);
     }
 

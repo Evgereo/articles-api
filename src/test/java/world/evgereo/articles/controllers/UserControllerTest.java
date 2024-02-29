@@ -25,7 +25,7 @@ import static world.evgereo.articles.mockfactories.UserMockFactory.*;
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
     @Mock
-    JwtTokenUtils jwtTokenUtils;
+    private JwtTokenUtils jwtTokenUtils;
     @Mock
     private UserService userService;
     @InjectMocks
@@ -61,7 +61,7 @@ class UserControllerTest {
     }
 
     @Test
-    void updateUser() throws Exception {
+    void editUser() throws Exception {
         when(userService.updateUser(any(UpdateUserDTO.class), eq(1))).thenReturn(getFirstUser());
         String userJson = objectMapper.writeValueAsString(getUpdateUserDTO());
         mockMvc.perform(patch("/users/{id}?edit", 1)

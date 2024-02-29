@@ -3,6 +3,8 @@ package world.evgereo.articles.mockfactories;
 import world.evgereo.articles.DTOs.CreateUpdateArticleDTO;
 import world.evgereo.articles.models.Article;
 
+import java.util.List;
+
 import static world.evgereo.articles.mockfactories.UserMockFactory.getFirstUser;
 
 public class ArticleMockFactory {
@@ -14,9 +16,21 @@ public class ArticleMockFactory {
             getFirstUser()
     );
 
+    private static final Article secondArticle = new Article(
+            2,
+            "test",
+            "second",
+            "2000-01-02",
+            getFirstUser()
+    );
+
 
     public static Article getFirstArticle() {
         return ArticleMockFactory.firstArticle;
+    }
+
+    public static List<Article> getListOfTwoArticles() {
+        return List.of(ArticleMockFactory.firstArticle, ArticleMockFactory.secondArticle);
     }
 
     public static CreateUpdateArticleDTO getCreateUpdateArticleDTO() {
