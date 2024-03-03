@@ -26,6 +26,6 @@ public class UserAuthorizationManager implements AuthorizationManager<RequestAut
         return new AuthorizationDecision(
                 isCurrentUserPage ||
                         auth.getAuthorities().stream().anyMatch(role ->
-                                role.getAuthority().equals("ROLE_MODERATOR")));
+                                role.getAuthority().equals("ROLE_MODER")));
     }
 }

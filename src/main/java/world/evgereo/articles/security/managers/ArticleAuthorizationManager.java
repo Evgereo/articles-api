@@ -29,6 +29,6 @@ public class ArticleAuthorizationManager implements AuthorizationManager<Request
         return new AuthorizationDecision(
                 isCurrentUserArticle ||
                         auth.getAuthorities().stream().anyMatch(role ->
-                                role.getAuthority().equals("ROLE_MODERATOR")));
+                                role.getAuthority().equals("ROLE_MODER")));
     }
 }

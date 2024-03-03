@@ -39,6 +39,7 @@ public class FilterChainConfig {
                         .requestMatchers(HttpMethod.DELETE, "/users/{id}").access(userAuthorizationManager)
                         .requestMatchers(HttpMethod.PATCH, "/articles/{id}").access(articleAuthorizationManager)
                         .requestMatchers(HttpMethod.DELETE, "/articles/{id}").access(articleAuthorizationManager)
+                        .requestMatchers("/actuator/**").hasRole("MODER")
                         .requestMatchers("/users/**", "/articles/**").authenticated())
                 .userDetailsService(userService)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
