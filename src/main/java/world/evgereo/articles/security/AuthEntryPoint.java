@@ -11,6 +11,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
@@ -18,6 +19,10 @@ import java.util.Map;
 @Slf4j
 public class AuthEntryPoint implements AuthenticationEntryPoint {
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
+
+    private static boolean existsPattern(HttpServletRequest request, String... patterns) {
+        return Arrays.stream(patterns).anyMatch(pattern -> request.getRequestURI().equals(pattern));
+    }
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
@@ -29,6 +34,10 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
 
     private boolean isNotEndpointPathExist(HttpServletRequest request) {
         Map<RequestMappingInfo, HandlerMethod> handlerMethods = requestMappingHandlerMapping.getHandlerMethods();
+        if (AuthEntryPoint.existsPattern(request, "/actuator", "/actuator/prometheus") && request.getMethod().equals("GET")) {
+            AuthEntryPoint.log.debug("Pattern {} exist", request.getRequestURI());
+            return false;
+        }
         for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethods.entrySet()) {
             RequestMappingInfo mappingInfo = entry.getKey();
             AuthEntryPoint.log.trace("Exist pattern: {} and request pattern: {}", mappingInfo.getPatternValues(), request.getRequestURI());
