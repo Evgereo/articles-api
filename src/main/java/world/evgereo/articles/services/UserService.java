@@ -1,6 +1,8 @@
 package world.evgereo.articles.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,6 +32,10 @@ public class UserService implements UserDetailsService {
 
     public List<User> getUsers() {
         return userRepository.findAll();
+    }
+
+    public Page<User> getPaginatedUsers(int page, int size) {
+        return userRepository.findAll(PageRequest.of(page, size));
     }
 
     public User loadUserById(int id) {

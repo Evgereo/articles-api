@@ -2,6 +2,7 @@ package world.evgereo.articles.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import world.evgereo.articles.DTOs.UpdateUserDTO;
 import world.evgereo.articles.models.User;
 import world.evgereo.articles.services.UserService;
+import world.evgereo.articles.utils.UriPageBuilder;
 
 import java.util.List;
 
@@ -22,6 +24,13 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<List<User>> getUsers() {
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+    }
+
+    @GetMapping(params = {"page", "size"})
+    public ResponseEntity<List<User>> getPaginatedUsers(@RequestParam(defaultValue = "0") int page,
+                                                        @RequestParam(defaultValue = "2") int size) { // to increase default size!
+        Page<User> paginatedUsers = userService.getPaginatedUsers(page, size);
+        return new ResponseEntity<>(paginatedUsers.getContent(), new UriPageBuilder("/users", paginatedUsers).getAllPagesUri(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
