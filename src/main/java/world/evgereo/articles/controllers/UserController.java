@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 import world.evgereo.articles.DTOs.UpdateUserDTO;
 import world.evgereo.articles.models.User;
 import world.evgereo.articles.services.UserService;
@@ -22,14 +23,15 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping()
-    public ResponseEntity<List<User>> getUsers() {
-        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+    public RedirectView getUsers() {
+        return new RedirectView("/users?page&size", true);
     }
 
     @GetMapping(params = {"page", "size"})
     public ResponseEntity<List<User>> getPaginatedUsers(@RequestParam(defaultValue = "0") int page,
-                                                        @RequestParam(defaultValue = "2") int size) { // to increase default size!
+                                                        @RequestParam(defaultValue = "10") int size) {
         Page<User> paginatedUsers = userService.getPaginatedUsers(page, size);
+        if (paginatedUsers.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(paginatedUsers.getContent(), new UriPageBuilder("/users", paginatedUsers).getAllPagesUri(), HttpStatus.OK);
     }
 

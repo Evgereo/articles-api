@@ -1,6 +1,8 @@
 package world.evgereo.articles.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import world.evgereo.articles.DTOs.CreateUpdateArticleDTO;
@@ -22,14 +24,18 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
+    public Page<Article> getPaginatedArticles(int page, int size) {
+        return articleRepository.findAll(PageRequest.of(page, size));
+    }
+
+    public Page<Article> getPaginatedArticlesByAuthorId(int authorId, int page, int size) {
+        return articleRepository.findAllByAuthorUserId(authorId, PageRequest.of(page, size));
+    }
+
     public Article loadArticleById(int id) {
         Article article = getArticle(id);
         if (article != null) return article;
         else throw new NotFoundException("Article with id " + id + " not found");
-    }
-
-    public User loadArticleAuthorById(int id) {
-        return loadArticleById(id).getAuthor();
     }
 
     private Article getArticle(int id) {

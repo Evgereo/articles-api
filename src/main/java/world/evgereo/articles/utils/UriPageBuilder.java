@@ -36,36 +36,36 @@ public class UriPageBuilder {
         if (page.hasNext()) {
             if (!stringBuilder.isEmpty()) stringBuilder.append(", ");
             stringBuilder.append(getLastPageUri());
-            if (page.getPageable().getPageNumber() < page.getTotalPages() - 1) {
+            if (page.getPageable().getPageNumber() < page.getTotalPages() - 2) {
                 stringBuilder.append(", ");
                 stringBuilder.append(getNextPageUri());
             }
         }
-        map.add("Link", stringBuilder.toString());
+        if (!stringBuilder.isEmpty()) map.add("Link", stringBuilder.toString());
         return map;
     }
 
-    private String getFirstPageUri() {
+    public String getFirstPageUri() {
         assert page != null;
         return "<" + buildPageUri(0, page.getSize()) + ">; rel=\"first\"";
     }
 
-    private String getPreviousPageUri() {
+    public String getPreviousPageUri() {
         assert page != null;
         return "<" + buildPageUri(page.getPageable().getPageNumber() - 1, page.getSize()) + ">; rel=\"prev\"";
     }
 
-    private String getNextPageUri() {
+    public String getNextPageUri() {
         assert page != null;
         return "<" + buildPageUri(page.getPageable().getPageNumber() + 1, page.getSize()) + ">; rel=\"next\"";
     }
 
-    private String getLastPageUri() {
+    public String getLastPageUri() {
         assert page != null;
         return "<" + buildPageUri(page.getTotalPages(), page.getSize()) + ">; rel=\"last\"";
     }
 
-    private String buildPageUri(int page, int size) {
+    public String buildPageUri(int page, int size) {
         return UriComponentsBuilder.newInstance()
                 .scheme(ServletUriComponentsBuilder.fromCurrentRequestUri().build().getScheme())
                 .host(ServletUriComponentsBuilder.fromCurrentRequestUri().build().getHost())
