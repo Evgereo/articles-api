@@ -89,6 +89,7 @@ public class UserService implements UserDetailsService {
         User user = loadUserById(id);
         if (!dto.getPassword().equals(dto.getPasswordConfirm()))
             throw new PasswordMismatchException("Entered passwords don't match");
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         mapper.map(dto, user);
         userRepository.save(user);
         return user;
