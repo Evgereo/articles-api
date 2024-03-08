@@ -1,14 +1,11 @@
 package world.evgereo.articles.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -33,10 +30,6 @@ public class User implements UserDetails {
     private String email;
 
     private String password;
-
-    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
-    @JsonBackReference
-    private List<Article> articles = new ArrayList<>(); // look for information on the cascade types // orphanRemoval = true, cascade = CascadeType.ALL
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",

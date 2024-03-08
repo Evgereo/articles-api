@@ -1,7 +1,7 @@
 package world.evgereo.articles.mockfactories;
 
-import world.evgereo.articles.DTOs.RegistrationUserDTO;
-import world.evgereo.articles.DTOs.UpdateUserDTO;
+import world.evgereo.articles.dtos.RegistrationUserDto;
+import world.evgereo.articles.dtos.UpdateUserDto;
 import world.evgereo.articles.models.Role;
 import world.evgereo.articles.models.User;
 
@@ -17,7 +17,6 @@ public class UserMockFactory {
                     10,
                     "testfirst@gmail.com",
                     "password",
-                    null,
                     Set.of(new Role(1, "ROLE_USER")));
 
     private static final User secondUser =
@@ -28,7 +27,6 @@ public class UserMockFactory {
                     20,
                     "testthird@gmail.com",
                     "password",
-                    null,
                     Set.of(new Role(1, "ROLE_USER"),
                             new Role(2, "ROLE_ADMIN")));
 
@@ -40,7 +38,6 @@ public class UserMockFactory {
                     30,
                     "testthird@gmail.com",
                     "password",
-                    null,
                     Set.of(new Role(1, "ROLE_USER"),
                             new Role(2, "ROLE_ADMIN"),
                             new Role(3, "ROLE_MODER")));
@@ -53,7 +50,6 @@ public class UserMockFactory {
                     40,
                     "testfourth@gmail.com",
                     "password",
-                    null,
                     Set.of(new Role(1, "ROLE_USER"),
                             new Role(2, "ROLE_ADMIN"),
                             new Role(3, "ROLE_MODER"),
@@ -67,8 +63,8 @@ public class UserMockFactory {
         return List.of(UserMockFactory.firstUser, UserMockFactory.fourthUser);
     }
 
-    public static RegistrationUserDTO getValidRegistrationUserDTO() {
-        return new RegistrationUserDTO(
+    public static RegistrationUserDto getValidRegistrationUserDTO() {
+        return new RegistrationUserDto(
                 "test",
                 "first",
                 10,
@@ -78,14 +74,14 @@ public class UserMockFactory {
         );
     }
 
-    public static RegistrationUserDTO getInvalidRegistrationUserDTO() {
-        RegistrationUserDTO dto = UserMockFactory.getValidRegistrationUserDTO();
+    public static RegistrationUserDto getInvalidRegistrationUserDTO() {
+        RegistrationUserDto dto = UserMockFactory.getValidRegistrationUserDTO();
         dto.setPasswordConfirm("notpassword");
         return dto;
     }
 
-    public static UpdateUserDTO getUpdateUserDTO() {
-        return new UpdateUserDTO(
+    public static UpdateUserDto getUpdateUserDTO() {
+        return new UpdateUserDto(
                 "test",
                 "first",
                 10,

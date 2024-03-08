@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.UnsatisfiedServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import world.evgereo.articles.errors.exceptions.AuthException;
@@ -14,7 +16,6 @@ import world.evgereo.articles.errors.exceptions.DuplicateUserException;
 import world.evgereo.articles.errors.exceptions.NotFoundException;
 import world.evgereo.articles.errors.exceptions.PasswordMismatchException;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -34,13 +35,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<HashMap<String, String>> badAuthenticationHandler(BadCredentialsException ex) {
+    public ResponseEntity<Map<String, String>> badAuthenticationHandler(BadCredentialsException ex) {
         GlobalExceptionHandler.log.debug(ex.getMessage());
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(AuthException.class)
-    public ResponseEntity<HashMap<String, String>> authHandler(AuthException ex) {
+    public ResponseEntity<Map<String, String>> authHandler(AuthException ex) {
         GlobalExceptionHandler.log.debug(ex.getMessage());
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
@@ -58,14 +59,26 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<HashMap<String, String>> userNotFoundHandler(UsernameNotFoundException ex) {
+    public ResponseEntity<Map<String, String>> userNotFoundHandler(UsernameNotFoundException ex) {
         GlobalExceptionHandler.log.debug(ex.getMessage());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UnsatisfiedServletRequestParameterException.class)
+    public ResponseEntity<Map<String, String>> userNotFoundHandler(UnsatisfiedServletRequestParameterException ex) {
+        GlobalExceptionHandler.log.debug(ex.getMessage());
+        return new ResponseEntity<>(Map.of("message", ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<HashMap<String, String>> userNotFoundHandler(NotFoundException ex) {
+    public ResponseEntity<Map<String, String>> userNotFoundHandler(NotFoundException ex) {
         GlobalExceptionHandler.log.debug(ex.getMessage());
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<Map<String, String>> userNotFoundHandler(HttpRequestMethodNotSupportedException ex) {
+        GlobalExceptionHandler.log.debug(ex.getMessage());
+        return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
     }
 }

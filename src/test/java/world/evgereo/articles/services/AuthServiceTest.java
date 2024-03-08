@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import world.evgereo.articles.DTOs.RefreshRequestDTO;
+import world.evgereo.articles.dtos.RefreshRequestDto;
 import world.evgereo.articles.errors.exceptions.AuthException;
 import world.evgereo.articles.models.User;
 import world.evgereo.articles.security.utils.JwtTokenUtils;
@@ -57,14 +57,14 @@ class AuthServiceTest {
         when(userService.loadUserByEmail(getFirstUser().getEmail())).thenReturn(getFirstUser());
         when(jwtTokenUtils.generateAccessToken(any(User.class))).thenReturn(getAccessToken());
         when(jwtTokenUtils.generateRefreshToken(any(User.class))).thenReturn(getRefreshToken());
-        authService.updateAuthTokens(new RefreshRequestDTO(getRefreshToken()));
+        authService.updateAuthTokens(new RefreshRequestDto(getRefreshToken()));
         verify(jwtTokenService, times(1)).setToken(any(String.class), eq(getRefreshToken()));
     }
 
     @Test
     void updateAuthTokens_withIncorrectToken_throwsException() {
         when(jwtTokenUtils.getRefreshEmail(getRefreshToken())).thenThrow(JwtException.class);
-        assertThrows(AuthException.class, () -> authService.updateAuthTokens(new RefreshRequestDTO(getRefreshToken())));
+        assertThrows(AuthException.class, () -> authService.updateAuthTokens(new RefreshRequestDto(getRefreshToken())));
         verify(jwtTokenService, times(0)).getTokenByEmail(any(String.class));
     }
 
@@ -72,7 +72,7 @@ class AuthServiceTest {
     void updateAuthTokens_withCorrectNotExistingToken_throwsException() {
         when(jwtTokenUtils.getRefreshEmail(getRefreshToken())).thenReturn(getFirstUser().getEmail());
         when(jwtTokenService.getTokenByEmail(getFirstUser().getEmail())).thenReturn(getRefreshToken() + "incorrect");
-        assertThrows(AuthException.class, () -> authService.updateAuthTokens(new RefreshRequestDTO(getRefreshToken())));
+        assertThrows(AuthException.class, () -> authService.updateAuthTokens(new RefreshRequestDto(getRefreshToken())));
         verify(userService, times(0)).loadUserByEmail(any(String.class));
     }
 }

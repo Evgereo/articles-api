@@ -8,7 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-import world.evgereo.articles.DTOs.UpdateUserDTO;
+import world.evgereo.articles.dtos.PasswordUserDto;
+import world.evgereo.articles.dtos.UpdateUserDto;
 import world.evgereo.articles.models.User;
 import world.evgereo.articles.services.UserService;
 import world.evgereo.articles.utils.UriPageBuilder;
@@ -41,8 +42,13 @@ public class UserController {
     }
 
     @PatchMapping(value = "/{id}", params = "edit", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> editUser(@RequestBody @Valid UpdateUserDTO user, @PathVariable("id") int id) {
+    public ResponseEntity<User> editUser(@RequestBody @Valid UpdateUserDto user, @PathVariable("id") int id) {
         return new ResponseEntity<>(userService.updateUser(user, id), HttpStatus.OK);
+    }
+
+    @PatchMapping(value = "/{id}", params = "password", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> editPasswordOfUser(@RequestBody @Valid PasswordUserDto user, @PathVariable("id") int id) {
+        return new ResponseEntity<>(userService.updatePassword(user, id), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}", params = "delete")

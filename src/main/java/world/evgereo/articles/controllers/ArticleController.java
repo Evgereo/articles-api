@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-import world.evgereo.articles.DTOs.CreateUpdateArticleDTO;
+import world.evgereo.articles.dtos.CreateUpdateArticleDto;
 import world.evgereo.articles.models.Article;
 import world.evgereo.articles.services.ArticleService;
 import world.evgereo.articles.utils.UriPageBuilder;
@@ -49,12 +49,12 @@ public class ArticleController {
     }
 
     @PostMapping("/articles/new")
-    public ResponseEntity<Article> createArticle(@RequestBody @Valid CreateUpdateArticleDTO article) {
+    public ResponseEntity<Article> createArticle(@RequestBody @Valid CreateUpdateArticleDto article) {
         return new ResponseEntity<>(articleService.createArticle(article), HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/articles/{id}", params = "edit", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Article> editArticle(@RequestBody @Valid CreateUpdateArticleDTO article, @PathVariable("id") int id) {
+    public ResponseEntity<Article> editArticle(@RequestBody @Valid CreateUpdateArticleDto article, @PathVariable("id") int id) {
         return new ResponseEntity<>(articleService.updateArticle(article, id), HttpStatus.OK);
     }
 

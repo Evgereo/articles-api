@@ -10,7 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import world.evgereo.articles.DTOs.RegistrationUserDTO;
+import world.evgereo.articles.dtos.RegistrationUserDto;
 import world.evgereo.articles.services.UserService;
 
 import static org.mockito.Mockito.*;
@@ -39,13 +39,13 @@ class RegistrationControllerTest {
 
     @Test
     void createUser() throws Exception {
-        when(userService.createUser(any(RegistrationUserDTO.class))).thenReturn(getFirstUser());
+        when(userService.createUser(any(RegistrationUserDto.class))).thenReturn(getFirstUser());
         String userJson = objectMapper.writeValueAsString(getValidRegistrationUserDTO());
         mockMvc.perform(post("/registration")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(userJson))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.userId").value(1));
-        verify(userService, times(1)).createUser(any(RegistrationUserDTO.class));
+        verify(userService, times(1)).createUser(any(RegistrationUserDto.class));
     }
 }

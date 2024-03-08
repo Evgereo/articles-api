@@ -6,9 +6,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-import world.evgereo.articles.DTOs.AuthRequestDTO;
-import world.evgereo.articles.DTOs.AuthResponseDTO;
-import world.evgereo.articles.DTOs.RefreshRequestDTO;
+import world.evgereo.articles.dtos.AuthRequestDto;
+import world.evgereo.articles.dtos.AuthResponseDto;
+import world.evgereo.articles.dtos.RefreshRequestDto;
 import world.evgereo.articles.errors.exceptions.AuthException;
 import world.evgereo.articles.models.User;
 import world.evgereo.articles.security.utils.JwtTokenUtils;
@@ -22,7 +22,7 @@ public class AuthService {
     private final JwtTokenUtils jwtTokenUtils;
     private final AuthenticationManager authenticationManager;
 
-    public AuthResponseDTO createAuthTokens(AuthRequestDTO authRequest) {
+    public AuthResponseDto createAuthTokens(AuthRequestDto authRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
         } catch (RuntimeException ex) {
@@ -32,7 +32,7 @@ public class AuthService {
         return generateTokens(authRequest.getEmail());
     }
 
-    public AuthResponseDTO updateAuthTokens(RefreshRequestDTO refreshRequest) {
+    public AuthResponseDto updateAuthTokens(RefreshRequestDto refreshRequest) {
         String email;
         try {
             email = jwtTokenUtils.getRefreshEmail(refreshRequest.getRefreshToken());
@@ -49,11 +49,11 @@ public class AuthService {
         throw new AuthException("Provided token is incorrect");
     }
 
-    private AuthResponseDTO generateTokens(String email) {
+    private AuthResponseDto generateTokens(String email) {
         User user = userService.loadUserByEmail(email);
         String accessToken = jwtTokenUtils.generateAccessToken(user);
         String refreshToken = jwtTokenUtils.generateRefreshToken(user);
         jwtTokenService.setToken(user.getEmail(), refreshToken);
-        return new AuthResponseDTO(accessToken, refreshToken);
+        return new AuthResponseDto(accessToken, refreshToken);
     }
 }

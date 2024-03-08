@@ -1,6 +1,6 @@
 package world.evgereo.articles.mockfactories;
 
-import world.evgereo.articles.DTOs.CreateUpdateArticleDTO;
+import world.evgereo.articles.dtos.CreateUpdateArticleDto;
 import world.evgereo.articles.models.Article;
 
 import java.util.List;
@@ -33,8 +33,8 @@ public class ArticleMockFactory {
         return List.of(ArticleMockFactory.firstArticle, ArticleMockFactory.secondArticle);
     }
 
-    public static CreateUpdateArticleDTO getCreateUpdateArticleDTO() {
-        return new CreateUpdateArticleDTO(
+    public static CreateUpdateArticleDto getCreateUpdateArticleDTO() {
+        return new CreateUpdateArticleDto(
                 "name",
                 "some text"
         );

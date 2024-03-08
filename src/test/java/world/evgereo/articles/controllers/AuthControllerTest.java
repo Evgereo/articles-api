@@ -10,8 +10,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import world.evgereo.articles.DTOs.AuthRequestDTO;
-import world.evgereo.articles.DTOs.RefreshRequestDTO;
+import world.evgereo.articles.dtos.AuthRequestDto;
+import world.evgereo.articles.dtos.RefreshRequestDto;
 import world.evgereo.articles.services.AuthService;
 
 import static org.mockito.Mockito.*;
@@ -39,7 +39,7 @@ class AuthControllerTest {
 
     @Test
     void giveAuthTokens() throws Exception {
-        when(authService.createAuthTokens(any(AuthRequestDTO.class))).thenReturn(getAuthResponseDTO());
+        when(authService.createAuthTokens(any(AuthRequestDto.class))).thenReturn(getAuthResponseDTO());
         String authRequestJson = objectMapper.writeValueAsString(getAuthRequestDTO());
         mockMvc.perform(post("/auth")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -47,12 +47,12 @@ class AuthControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").value(getAccessToken()))
                 .andExpect(jsonPath("$.refreshToken").value(getRefreshToken()));
-        verify(authService, times(1)).createAuthTokens(any(AuthRequestDTO.class));
+        verify(authService, times(1)).createAuthTokens(any(AuthRequestDto.class));
     }
 
     @Test
     void giveNewTokens() throws Exception {
-        when(authService.updateAuthTokens(any(RefreshRequestDTO.class))).thenReturn(getAuthResponseDTO());
+        when(authService.updateAuthTokens(any(RefreshRequestDto.class))).thenReturn(getAuthResponseDTO());
         String refreshRequestJson = objectMapper.writeValueAsString(getRefreshRequestDTO());
         mockMvc.perform(post("/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -60,6 +60,6 @@ class AuthControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").value(getAccessToken()))
                 .andExpect(jsonPath("$.refreshToken").value(getRefreshToken()));
-        verify(authService, times(1)).updateAuthTokens(any(RefreshRequestDTO.class));
+        verify(authService, times(1)).updateAuthTokens(any(RefreshRequestDto.class));
     }
 }

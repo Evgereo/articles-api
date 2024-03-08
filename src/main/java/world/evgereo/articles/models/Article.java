@@ -28,7 +28,7 @@ public class Article {
     private String postingDate;
 
     @ManyToOne
-    @JoinColumn(name = "author_id", referencedColumnName = "user_id", nullable = false)
+    @JoinColumn(name = "author_id", referencedColumnName = "user_id")
     @JsonManagedReference
     private User author;
 }

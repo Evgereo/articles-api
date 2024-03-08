@@ -1,28 +1,28 @@
 package world.evgereo.articles.mockfactories;
 
-import world.evgereo.articles.DTOs.AuthRequestDTO;
-import world.evgereo.articles.DTOs.AuthResponseDTO;
-import world.evgereo.articles.DTOs.RefreshRequestDTO;
+import world.evgereo.articles.dtos.AuthRequestDto;
+import world.evgereo.articles.dtos.AuthResponseDto;
+import world.evgereo.articles.dtos.RefreshRequestDto;
 
 public class AuthMockFactory {
     private static final String accessToken = "any.access.token";
     private static final String refreshToken = "any.refresh.token";
 
-    public static AuthRequestDTO getAuthRequestDTO() {
-        return new AuthRequestDTO(
+    public static AuthRequestDto getAuthRequestDTO() {
+        return new AuthRequestDto(
                 "testfirst@gmail.com",
                 "password"
         );
     }
 
-    public static RefreshRequestDTO getRefreshRequestDTO() {
-        return new RefreshRequestDTO(
+    public static RefreshRequestDto getRefreshRequestDTO() {
+        return new RefreshRequestDto(
                 AuthMockFactory.refreshToken
         );
     }
 
-    public static AuthResponseDTO getAuthResponseDTO() {
-        return new AuthResponseDTO(
+    public static AuthResponseDto getAuthResponseDTO() {
+        return new AuthResponseDto(
                 AuthMockFactory.accessToken,
                 AuthMockFactory.refreshToken
         );

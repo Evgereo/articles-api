@@ -1,5 +1,6 @@
 package world.evgereo.articles.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,8 +9,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import world.evgereo.articles.DTOs.RegistrationUserDTO;
-import world.evgereo.articles.DTOs.UpdateUserDTO;
+import world.evgereo.articles.dtos.PasswordUserDto;
+import world.evgereo.articles.dtos.RegistrationUserDto;
+import world.evgereo.articles.dtos.UpdateUserDto;
 import world.evgereo.articles.errors.exceptions.DuplicateUserException;
 import world.evgereo.articles.errors.exceptions.NotFoundException;
 import world.evgereo.articles.errors.exceptions.PasswordMismatchException;
@@ -63,7 +65,7 @@ public class UserService implements UserDetailsService {
         return !email.isEmpty() ? userRepository.findUserByEmail(email).orElse(null) : null;
     }
 
-    public User createUser(RegistrationUserDTO dto) {
+    public User createUser(RegistrationUserDto dto) {
         if (getUserByEmail(dto.getEmail()) != null)
             throw new DuplicateUserException("A user with the email " + dto.getEmail() + " already exists");
         if (!dto.getPassword().equals(dto.getPasswordConfirm()))
@@ -76,15 +78,26 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public User updateUser(UpdateUserDTO updateUser, int id) {
+    public User updateUser(UpdateUserDto dto, int id) {
         User user = loadUserById(id);
-        mapper.map(updateUser, user);
+        mapper.map(dto, user);
         userRepository.save(user);
         return user;
     }
 
+    public User updatePassword(PasswordUserDto dto, int id) {
+        User user = loadUserById(id);
+        if (!dto.getPassword().equals(dto.getPasswordConfirm()))
+            throw new PasswordMismatchException("Entered passwords don't match");
+        mapper.map(dto, user);
+        userRepository.save(user);
+        return user;
+    }
+
+    @Transactional
     public void deleteUser(int id) {
         jwtTokenService.deleteToken(loadUserById(id).getEmail());
+        userRepository.updateArticlesUserToNull(id);
         userRepository.deleteById(id);
     }
 }

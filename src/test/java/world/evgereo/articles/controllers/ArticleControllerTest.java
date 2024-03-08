@@ -10,7 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import world.evgereo.articles.DTOs.CreateUpdateArticleDTO;
+import world.evgereo.articles.dtos.CreateUpdateArticleDto;
 import world.evgereo.articles.services.ArticleService;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -57,26 +57,26 @@ class ArticleControllerTest {
 
     @Test
     void createArticle() throws Exception {
-        when(articleService.createArticle(any(CreateUpdateArticleDTO.class))).thenReturn(getFirstArticle());
+        when(articleService.createArticle(any(CreateUpdateArticleDto.class))).thenReturn(getFirstArticle());
         String articleJson = objectMapper.writeValueAsString(getCreateUpdateArticleDTO());
         mockMvc.perform(post("/articles/new")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(articleJson))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.articleId").value(1));
-        verify(articleService, times(1)).createArticle(any(CreateUpdateArticleDTO.class));
+        verify(articleService, times(1)).createArticle(any(CreateUpdateArticleDto.class));
     }
 
     @Test
     void editArticle() throws Exception {
-        when(articleService.updateArticle(any(CreateUpdateArticleDTO.class), eq(1))).thenReturn(getFirstArticle());
+        when(articleService.updateArticle(any(CreateUpdateArticleDto.class), eq(1))).thenReturn(getFirstArticle());
         String articleJson = objectMapper.writeValueAsString(getCreateUpdateArticleDTO());
         mockMvc.perform(patch("/articles/{id}?edit", 1)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(articleJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.articleId").value(1));
-        verify(articleService, times(1)).updateArticle(any(CreateUpdateArticleDTO.class), eq(1));
+        verify(articleService, times(1)).updateArticle(any(CreateUpdateArticleDto.class), eq(1));
     }
 
     @Test

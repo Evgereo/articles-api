@@ -5,10 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import world.evgereo.articles.DTOs.CreateUpdateArticleDTO;
+import world.evgereo.articles.dtos.CreateUpdateArticleDto;
 import world.evgereo.articles.errors.exceptions.NotFoundException;
 import world.evgereo.articles.models.Article;
-import world.evgereo.articles.models.User;
 import world.evgereo.articles.repositories.ArticleRepository;
 import world.evgereo.articles.utils.MapperUtils;
 
@@ -18,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final UserService userService;
     private final MapperUtils mapper;
 
     public List<Article> getArticles() {
@@ -42,16 +42,16 @@ public class ArticleService {
         return id != 0 ? articleRepository.findById(id).orElse(null) : null;
     }
 
-    public Article updateArticle(CreateUpdateArticleDTO updateArticle, int id) {
+    public Article updateArticle(CreateUpdateArticleDto updateArticle, int id) {
         Article article = loadArticleById(id);
         mapper.map(updateArticle, article);
         articleRepository.save(article);
         return article;
     }
 
-    public Article createArticle(CreateUpdateArticleDTO createArticle) {
+    public Article createArticle(CreateUpdateArticleDto createArticle) {
         Article article = new Article();
-        article.setAuthor((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        article.setAuthor(userService.loadUserByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
         mapper.map(createArticle, article);
         articleRepository.save(article);
         return article;

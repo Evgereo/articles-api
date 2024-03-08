@@ -10,7 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import world.evgereo.articles.DTOs.UpdateUserDTO;
+import world.evgereo.articles.dtos.UpdateUserDto;
 import world.evgereo.articles.security.filters.JwtFilter;
 import world.evgereo.articles.security.utils.JwtTokenUtils;
 import world.evgereo.articles.services.UserService;
@@ -62,14 +62,14 @@ class UserControllerTest {
 
     @Test
     void editUser() throws Exception {
-        when(userService.updateUser(any(UpdateUserDTO.class), eq(1))).thenReturn(getFirstUser());
+        when(userService.updateUser(any(UpdateUserDto.class), eq(1))).thenReturn(getFirstUser());
         String userJson = objectMapper.writeValueAsString(getUpdateUserDTO());
         mockMvc.perform(patch("/users/{id}?edit", 1)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(userJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId").value(1));
-        verify(userService, times(1)).updateUser(any(UpdateUserDTO.class), eq(1));
+        verify(userService, times(1)).updateUser(any(UpdateUserDto.class), eq(1));
     }
 
     @Test
