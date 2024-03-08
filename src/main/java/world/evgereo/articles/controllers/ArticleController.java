@@ -34,7 +34,7 @@ public class ArticleController {
         return new ResponseEntity<>(paginatedArticles.getContent(), new UriPageBuilder("/articles", paginatedArticles).getAllPagesUri(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/users/{userId}/articles")
+    @GetMapping(value = "/users/{userId}/articles", params = {"page", "size"})
     public ResponseEntity<List<Article>> getArticlesOfUser(@PathVariable("userId") int id,
                                                            @RequestParam(defaultValue = "0") int page,
                                                            @RequestParam(defaultValue = "10") int size) {
