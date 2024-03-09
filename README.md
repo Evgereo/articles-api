@@ -1,7 +1,4 @@
 # articles-api
+The project is built on Spring Boot and is an interaction between users and articles. The application implements user authentication using JWT tokens and role-based authorization. In addition, the project includes unit tests for all controllers and services that have business logic. The application is connected to databases such as Redis and PostgreSQL. The project can be built and run using Docker Compose.
 
-Nothing interesting. I just started using git and continue to learn Spring and some else technologies
-I know this code is not great, but it is not bad too, in my opinion:)
-
-To raise the api using docker compose, use the "docker compose up --build" command and all the necessary api containers
-will be started and configured by themselves
+To run the api using docker compose, use the command "docker compose up --build" and all the required api containers will be started and configured independently of each other
