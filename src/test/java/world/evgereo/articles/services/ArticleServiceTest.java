@@ -17,7 +17,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static world.evgereo.articles.mockfactories.ArticleMockFactory.getCreateUpdateArticleDTO;
+import static world.evgereo.articles.mockfactories.ArticleMockFactory.getCreateUpdateArticleDto;
 import static world.evgereo.articles.mockfactories.ArticleMockFactory.getFirstArticle;
 import static world.evgereo.articles.mockfactories.UserMockFactory.getFirstUser;
 
@@ -25,6 +25,8 @@ import static world.evgereo.articles.mockfactories.UserMockFactory.getFirstUser;
 class ArticleServiceTest {
     @Mock
     private ArticleRepository articleRepository;
+    @Mock
+    private UserService userService;
     @Mock
     private MapperUtils mapper;
     @InjectMocks
@@ -63,15 +65,16 @@ class ArticleServiceTest {
     @Test
     void updateArticle_getArticle() {
         when(articleRepository.findById(1)).thenReturn(Optional.ofNullable(getFirstArticle()));
-        articleService.updateArticle(getCreateUpdateArticleDTO(), 1);
+        articleService.updateArticle(getCreateUpdateArticleDto(), 1);
         verify(articleRepository, times(1)).save(any(Article.class));
     }
 
     @Test
     void createArticle_getArticle() {
         SecurityContextHolder.getContext().setAuthentication(auth);
-        when(auth.getPrincipal()).thenReturn(getFirstUser());
-        articleService.createArticle(getCreateUpdateArticleDTO());
+        when(auth.getPrincipal()).thenReturn(getFirstUser().getEmail());
+        when(userService.loadUserByEmail(any(String.class))).thenReturn(getFirstUser());
+        articleService.createArticle(getCreateUpdateArticleDto());
         verify(articleRepository, times(1)).save(any(Article.class));
     }
 

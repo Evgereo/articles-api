@@ -1,5 +1,9 @@
 package world.evgereo.articles.mockfactories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import world.evgereo.articles.dtos.PasswordUserDto;
 import world.evgereo.articles.dtos.RegistrationUserDto;
 import world.evgereo.articles.dtos.UpdateUserDto;
 import world.evgereo.articles.models.Role;
@@ -63,7 +67,15 @@ public class UserMockFactory {
         return List.of(UserMockFactory.firstUser, UserMockFactory.fourthUser);
     }
 
-    public static RegistrationUserDto getValidRegistrationUserDTO() {
+    public static Page<User> getPageOfTwoUsers() {
+        return new PageImpl<>(UserMockFactory.getListOfTwoUsers(), PageRequest.of(0, 10), 100L);
+    }
+
+    public static Page<User> getEmptyPage() {
+        return new PageImpl<>(List.of(), PageRequest.of(0, 10), 100L);
+    }
+
+    public static RegistrationUserDto getValidRegistrationUserDto() {
         return new RegistrationUserDto(
                 "test",
                 "first",
@@ -74,13 +86,26 @@ public class UserMockFactory {
         );
     }
 
-    public static RegistrationUserDto getInvalidRegistrationUserDTO() {
-        RegistrationUserDto dto = UserMockFactory.getValidRegistrationUserDTO();
+    public static RegistrationUserDto getInvalidRegistrationUserDto() {
+        RegistrationUserDto dto = UserMockFactory.getValidRegistrationUserDto();
         dto.setPasswordConfirm("notpassword");
         return dto;
     }
 
-    public static UpdateUserDto getUpdateUserDTO() {
+    public static PasswordUserDto getValidPasswordUserDto() {
+        return new PasswordUserDto(
+                "password",
+                "password"
+        );
+    }
+
+    public static PasswordUserDto getInvalidPasswordUserDto() {
+        PasswordUserDto dto = UserMockFactory.getValidPasswordUserDto();
+        dto.setPasswordConfirm("notpassword");
+        return dto;
+    }
+
+    public static UpdateUserDto getUpdateUserDto() {
         return new UpdateUserDto(
                 "test",
                 "first",

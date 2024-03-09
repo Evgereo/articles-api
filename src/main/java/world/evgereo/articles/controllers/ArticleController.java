@@ -6,14 +6,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 import world.evgereo.articles.dtos.CreateUpdateArticleDto;
 import world.evgereo.articles.models.Article;
 import world.evgereo.articles.services.ArticleService;
 import world.evgereo.articles.utils.UriPageBuilder;
 
 import java.util.List;
+
+import static world.evgereo.articles.utils.UriPageBuilder.buildPageUri;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,15 +26,18 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @GetMapping("/articles")
-    public RedirectView getArticles() {
-        return new RedirectView("articles?page&size", true);
+    public ResponseEntity<?> getArticles() {
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>(1);
+        map.add("Location", buildPageUri(0, 10));
+        return new ResponseEntity<>(map, HttpStatus.MOVED_PERMANENTLY);
     }
 
     @GetMapping(value = "/articles", params = {"page", "size"})
     public ResponseEntity<List<Article>> getPaginatedArticles(@RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size) {
         Page<Article> paginatedArticles = articleService.getPaginatedArticles(page, size);
-        return new ResponseEntity<>(paginatedArticles.getContent(), new UriPageBuilder("/articles", paginatedArticles).getAllPagesUri(), HttpStatus.OK);
+        if (paginatedArticles.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(paginatedArticles.getContent(), new UriPageBuilder(paginatedArticles).getAllPagesUri(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/users/{userId}/articles", params = {"page", "size"})
@@ -40,7 +46,7 @@ public class ArticleController {
                                                            @RequestParam(defaultValue = "10") int size) {
         Page<Article> paginatedArticles = articleService.getPaginatedArticlesByAuthorId(id, page, size);
         if (paginatedArticles.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(paginatedArticles.getContent(), new UriPageBuilder("/articles", paginatedArticles).getAllPagesUri(), HttpStatus.OK);
+        return new ResponseEntity<>(paginatedArticles.getContent(), new UriPageBuilder(paginatedArticles).getAllPagesUri(), HttpStatus.OK);
     }
 
     @GetMapping("/articles/{id}")

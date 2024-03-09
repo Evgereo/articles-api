@@ -8,20 +8,20 @@ public class AuthMockFactory {
     private static final String accessToken = "any.access.token";
     private static final String refreshToken = "any.refresh.token";
 
-    public static AuthRequestDto getAuthRequestDTO() {
+    public static AuthRequestDto getAuthRequestDto() {
         return new AuthRequestDto(
                 "testfirst@gmail.com",
                 "password"
         );
     }
 
-    public static RefreshRequestDto getRefreshRequestDTO() {
+    public static RefreshRequestDto getRefreshRequestDto() {
         return new RefreshRequestDto(
                 AuthMockFactory.refreshToken
         );
     }
 
-    public static AuthResponseDto getAuthResponseDTO() {
+    public static AuthResponseDto getAuthResponseDto() {
         return new AuthResponseDto(
                 AuthMockFactory.accessToken,
                 AuthMockFactory.refreshToken

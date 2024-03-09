@@ -65,29 +65,43 @@ class UserServiceTest {
     @Test
     void createUser_withCorrectData_getUser() {
         when(userRepository.findUserByEmail(any(String.class))).thenReturn(Optional.empty());
-        userService.createUser(getValidRegistrationUserDTO());
+        userService.createUser(getValidRegistrationUserDto());
         verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
     void createUser_withDuplicateUser_throwsDuplicateUserException() {
         when(userRepository.findUserByEmail(any(String.class))).thenReturn(Optional.ofNullable(getFirstUser()));
-        assertThrows(DuplicateUserException.class, () -> userService.createUser(getValidRegistrationUserDTO()));
+        assertThrows(DuplicateUserException.class, () -> userService.createUser(getValidRegistrationUserDto()));
         verify(userRepository, times(0)).save(any(User.class));
     }
 
     @Test
     void createUser_withMismatchPassword_throwsPasswordMismatchException() {
         when(userRepository.findUserByEmail(any(String.class))).thenReturn(Optional.empty());
-        assertThrows(PasswordMismatchException.class, () -> userService.createUser(getInvalidRegistrationUserDTO()));
+        assertThrows(PasswordMismatchException.class, () -> userService.createUser(getInvalidRegistrationUserDto()));
         verify(userRepository, times(0)).save(any(User.class));
     }
 
     @Test
     void updateUser_getUser() {
         when(userRepository.findById(1)).thenReturn(Optional.ofNullable(getFirstUser()));
-        assertEquals(getFirstUser(), userService.updateUser(getUpdateUserDTO(), 1));
+        assertEquals(getFirstUser(), userService.updateUser(getUpdateUserDto(), 1));
         verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void updatePassword_withCorrectPassword_getUser() {
+        when(userRepository.findById(1)).thenReturn(Optional.ofNullable(getFirstUser()));
+        userService.updatePassword(getValidPasswordUserDto(), 1);
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void updatePassword_withMismatchPassword_throwsPasswordMismatchException() {
+        when(userRepository.findById(1)).thenReturn(Optional.ofNullable(getFirstUser()));
+        assertThrows(PasswordMismatchException.class, () -> userService.updatePassword(getInvalidPasswordUserDto(), 1));
+        verify(userRepository, times(0)).save(any(User.class));
     }
 
     @Test
@@ -95,6 +109,7 @@ class UserServiceTest {
         when(userRepository.findById(1)).thenReturn(Optional.ofNullable(getFirstUser()));
         userService.deleteUser(1);
         verify(jwtTokenService, times(1)).deleteToken("testfirst@gmail.com");
+        verify(userRepository, times(1)).updateArticlesUserToNull(1);
         verify(userRepository, times(1)).deleteById(1);
     }
 }

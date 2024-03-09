@@ -6,8 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 import world.evgereo.articles.dtos.PasswordUserDto;
 import world.evgereo.articles.dtos.UpdateUserDto;
 import world.evgereo.articles.models.User;
@@ -15,6 +16,8 @@ import world.evgereo.articles.services.UserService;
 import world.evgereo.articles.utils.UriPageBuilder;
 
 import java.util.List;
+
+import static world.evgereo.articles.utils.UriPageBuilder.buildPageUri;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,8 +27,10 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping()
-    public RedirectView getUsers() {
-        return new RedirectView("/users?page&size", true);
+    public ResponseEntity<?> getUsers() {
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>(1);
+        map.add("Location", buildPageUri(0, 10));
+        return new ResponseEntity<>(map, HttpStatus.MOVED_PERMANENTLY);
     }
 
     @GetMapping(params = {"page", "size"})
@@ -33,7 +38,7 @@ public class UserController {
                                                         @RequestParam(defaultValue = "10") int size) {
         Page<User> paginatedUsers = userService.getPaginatedUsers(page, size);
         if (paginatedUsers.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(paginatedUsers.getContent(), new UriPageBuilder("/users", paginatedUsers).getAllPagesUri(), HttpStatus.OK);
+        return new ResponseEntity<>(paginatedUsers.getContent(), new UriPageBuilder(paginatedUsers).getAllPagesUri(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

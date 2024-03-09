@@ -39,8 +39,8 @@ class AuthControllerTest {
 
     @Test
     void giveAuthTokens() throws Exception {
-        when(authService.createAuthTokens(any(AuthRequestDto.class))).thenReturn(getAuthResponseDTO());
-        String authRequestJson = objectMapper.writeValueAsString(getAuthRequestDTO());
+        when(authService.createAuthTokens(any(AuthRequestDto.class))).thenReturn(getAuthResponseDto());
+        String authRequestJson = objectMapper.writeValueAsString(getAuthRequestDto());
         mockMvc.perform(post("/auth")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(authRequestJson))
@@ -52,8 +52,8 @@ class AuthControllerTest {
 
     @Test
     void giveNewTokens() throws Exception {
-        when(authService.updateAuthTokens(any(RefreshRequestDto.class))).thenReturn(getAuthResponseDTO());
-        String refreshRequestJson = objectMapper.writeValueAsString(getRefreshRequestDTO());
+        when(authService.updateAuthTokens(any(RefreshRequestDto.class))).thenReturn(getAuthResponseDto());
+        String refreshRequestJson = objectMapper.writeValueAsString(getRefreshRequestDto());
         mockMvc.perform(post("/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(refreshRequestJson))

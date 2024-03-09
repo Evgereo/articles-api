@@ -11,7 +11,7 @@ create table if not exists users
 create table if not exists articles
 (
     article_id   serial       not null primary key,
-    author_id    integer      not null,
+    author_id    integer,
     article_name varchar(255) not null,
     article_text varchar(255),
     posting_date timestamp    not null

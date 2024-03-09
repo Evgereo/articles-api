@@ -1,5 +1,8 @@
 package world.evgereo.articles.mockfactories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import world.evgereo.articles.dtos.CreateUpdateArticleDto;
 import world.evgereo.articles.models.Article;
 
@@ -33,7 +36,15 @@ public class ArticleMockFactory {
         return List.of(ArticleMockFactory.firstArticle, ArticleMockFactory.secondArticle);
     }
 
-    public static CreateUpdateArticleDto getCreateUpdateArticleDTO() {
+    public static Page<Article> getPageOfTwoArticles() {
+        return new PageImpl<>(ArticleMockFactory.getListOfTwoArticles(), PageRequest.of(0, 10), 100L);
+    }
+
+    public static Page<Article> getEmptyPage() {
+        return new PageImpl<>(List.of(), PageRequest.of(0, 10), 100L);
+    }
+
+    public static CreateUpdateArticleDto getCreateUpdateArticleDto() {
         return new CreateUpdateArticleDto(
                 "name",
                 "some text"

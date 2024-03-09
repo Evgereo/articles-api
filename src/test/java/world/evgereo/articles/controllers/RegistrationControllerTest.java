@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static world.evgereo.articles.mockfactories.UserMockFactory.getFirstUser;
-import static world.evgereo.articles.mockfactories.UserMockFactory.getValidRegistrationUserDTO;
+import static world.evgereo.articles.mockfactories.UserMockFactory.getValidRegistrationUserDto;
 
 @ExtendWith(MockitoExtension.class)
 class RegistrationControllerTest {
@@ -40,7 +40,7 @@ class RegistrationControllerTest {
     @Test
     void createUser() throws Exception {
         when(userService.createUser(any(RegistrationUserDto.class))).thenReturn(getFirstUser());
-        String userJson = objectMapper.writeValueAsString(getValidRegistrationUserDTO());
+        String userJson = objectMapper.writeValueAsString(getValidRegistrationUserDto());
         mockMvc.perform(post("/registration")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(userJson))

@@ -1,6 +1,7 @@
 package world.evgereo.articles.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.core.StringEndsWith;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import world.evgereo.articles.dtos.PasswordUserDto;
 import world.evgereo.articles.dtos.UpdateUserDto;
 import world.evgereo.articles.security.filters.JwtFilter;
 import world.evgereo.articles.security.utils.JwtTokenUtils;
@@ -18,8 +20,7 @@ import world.evgereo.articles.services.UserService;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static world.evgereo.articles.mockfactories.UserMockFactory.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,11 +45,27 @@ class UserControllerTest {
 
     @Test
     void getUsers() throws Exception {
-        when(userService.getUsers()).thenReturn(getListOfTwoUsers());
         mockMvc.perform(get("/users"))
+                .andExpect(status().isMovedPermanently())
+                .andExpect(header().string("Location", new StringEndsWith("/users?page=0&size=10")));
+    }
+
+    @Test
+    void getPaginatedUsers_withExistingPage_getUsers() throws Exception {
+        when(userService.getPaginatedUsers(0, 10)).thenReturn(getPageOfTwoUsers());
+        mockMvc.perform(get("/users?page=0&size=10"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)));
-        verify(userService, times(1)).getUsers();
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(header().exists("Link"));
+        verify(userService, times(1)).getPaginatedUsers(0, 10);
+    }
+
+    @Test
+    void getPaginatedUsers_withNotExistingPage_getNotFoundStatus() throws Exception {
+        when(userService.getPaginatedUsers(1000, 10)).thenReturn(getEmptyPage());
+        mockMvc.perform(get("/users?page=1000&size=10"))
+                .andExpect(status().isNotFound());
+        verify(userService, times(1)).getPaginatedUsers(1000, 10);
     }
 
     @Test
@@ -63,13 +80,25 @@ class UserControllerTest {
     @Test
     void editUser() throws Exception {
         when(userService.updateUser(any(UpdateUserDto.class), eq(1))).thenReturn(getFirstUser());
-        String userJson = objectMapper.writeValueAsString(getUpdateUserDTO());
+        String userJson = objectMapper.writeValueAsString(getUpdateUserDto());
         mockMvc.perform(patch("/users/{id}?edit", 1)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(userJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId").value(1));
         verify(userService, times(1)).updateUser(any(UpdateUserDto.class), eq(1));
+    }
+
+    @Test
+    void editPasswordOfUser() throws Exception {
+        when(userService.updatePassword(any(PasswordUserDto.class), eq(1))).thenReturn(getFirstUser());
+        String passwordJson = objectMapper.writeValueAsString(getValidPasswordUserDto());
+        mockMvc.perform(patch("/users/{id}?password", 1)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(passwordJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId").value(1));
+        verify(userService, times(1)).updatePassword(any(PasswordUserDto.class), eq(1));
     }
 
     @Test

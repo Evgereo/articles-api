@@ -1,6 +1,8 @@
 package world.evgereo.articles.utils;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
 import org.springframework.util.LinkedMultiValueMap;
@@ -8,19 +10,24 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Objects;
+
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UriPageBuilder {
-    private final String startUri;
     private Page<?> page;
 
-    public UriPageBuilder(String startUri) {
-        this.startUri = startUri;
-    }
-
-    public UriPageBuilder(String startUri, Page<?> page) {
-        this.startUri = startUri;
-        this.page = page;
+    public static String buildPageUri(int page, int size) {
+        return UriComponentsBuilder.newInstance()
+                .scheme(ServletUriComponentsBuilder.fromCurrentRequestUri().build().getScheme())
+                .host(ServletUriComponentsBuilder.fromCurrentRequestUri().build().getHost())
+                .port(ServletUriComponentsBuilder.fromCurrentRequestUri().build().getPort())
+                .path(Objects.requireNonNull(ServletUriComponentsBuilder.fromCurrentRequestUri().build().getPath()))
+                .queryParam("page", page)
+                .queryParam("size", size)
+                .build().toUriString();
     }
 
     public MultiValueMap<String, String> getAllPagesUri() {
@@ -47,32 +54,21 @@ public class UriPageBuilder {
 
     public String getFirstPageUri() {
         assert page != null;
-        return "<" + buildPageUri(0, page.getSize()) + ">; rel=\"first\"";
+        return "<" + UriPageBuilder.buildPageUri(0, page.getSize()) + ">; rel=\"first\"";
     }
 
     public String getPreviousPageUri() {
         assert page != null;
-        return "<" + buildPageUri(page.getPageable().getPageNumber() - 1, page.getSize()) + ">; rel=\"prev\"";
+        return "<" + UriPageBuilder.buildPageUri(page.getPageable().getPageNumber() - 1, page.getSize()) + ">; rel=\"prev\"";
     }
 
     public String getNextPageUri() {
         assert page != null;
-        return "<" + buildPageUri(page.getPageable().getPageNumber() + 1, page.getSize()) + ">; rel=\"next\"";
+        return "<" + UriPageBuilder.buildPageUri(page.getPageable().getPageNumber() + 1, page.getSize()) + ">; rel=\"next\"";
     }
 
     public String getLastPageUri() {
         assert page != null;
-        return "<" + buildPageUri(page.getTotalPages(), page.getSize()) + ">; rel=\"last\"";
-    }
-
-    public String buildPageUri(int page, int size) {
-        return UriComponentsBuilder.newInstance()
-                .scheme(ServletUriComponentsBuilder.fromCurrentRequestUri().build().getScheme())
-                .host(ServletUriComponentsBuilder.fromCurrentRequestUri().build().getHost())
-                .port(ServletUriComponentsBuilder.fromCurrentRequestUri().build().getPort())
-                .path(startUri)
-                .queryParam("page", page)
-                .queryParam("size", size)
-                .build().toUriString();
+        return "<" + UriPageBuilder.buildPageUri(page.getTotalPages(), page.getSize()) + ">; rel=\"last\"";
     }
 }

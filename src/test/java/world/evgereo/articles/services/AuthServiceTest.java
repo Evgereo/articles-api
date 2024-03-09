@@ -38,7 +38,7 @@ class AuthServiceTest {
         when(userService.loadUserByEmail(getFirstUser().getEmail())).thenReturn(getFirstUser());
         when(jwtTokenUtils.generateAccessToken(any(User.class))).thenReturn(getAccessToken());
         when(jwtTokenUtils.generateRefreshToken(any(User.class))).thenReturn(getRefreshToken());
-        authService.createAuthTokens(getAuthRequestDTO());
+        authService.createAuthTokens(getAuthRequestDto());
         verify(jwtTokenService, times(1)).setToken(any(String.class), eq(getRefreshToken()));
     }
 
@@ -46,7 +46,7 @@ class AuthServiceTest {
     void createAuthTokens_withBadCredentials_throwsException() {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenThrow(new RuntimeException("Test. Bad credentials or any else runtime exception"));
-        assertThrows(BadCredentialsException.class, () -> authService.createAuthTokens(getAuthRequestDTO()));
+        assertThrows(BadCredentialsException.class, () -> authService.createAuthTokens(getAuthRequestDto()));
         verify(jwtTokenService, times(0)).setToken(any(String.class), any(String.class));
     }
 
