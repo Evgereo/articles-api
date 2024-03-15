@@ -3,6 +3,7 @@ spring:
     redis:
       host: localhost
       port: 6379
+      time-to-live: 2592000
   datasource:
     url: jdbc:postgresql://192.168.1.104/articles?stringtype=unspecified&user=postgres&password=root #(for wsl)
     #jdbc:postgresql://127.0.0.1:5432/articles?stringtype=unspecified&user=postgres&password=root (for windows)
