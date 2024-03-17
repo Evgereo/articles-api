@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import world.evgereo.articles.dtos.PasswordUserDto;
 import world.evgereo.articles.dtos.RegistrationUserDto;
 import world.evgereo.articles.dtos.UpdateUserDto;
+import world.evgereo.articles.errors.exceptions.BadRequestException;
 import world.evgereo.articles.errors.exceptions.DuplicateUserException;
 import world.evgereo.articles.errors.exceptions.NotFoundException;
 import world.evgereo.articles.errors.exceptions.PasswordMismatchException;
@@ -74,25 +75,28 @@ public class UserService implements UserDetailsService {
         mapper.map(dto, user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(new Role(1, "ROLE_USER")));
-        userRepository.save(user);
-        return user;
+        return userRepository.save(user);
     }
 
+    @Transactional
     public User updateUser(UpdateUserDto dto, int id) {
         User user = loadUserById(id);
-        mapper.map(dto, user);
-        userRepository.save(user);
-        return user;
+        if (user != null) {
+            mapper.map(dto, user);
+            return userRepository.save(user);
+        } else throw new BadRequestException("User with id " + id + "to update has been not found");
     }
 
+    @Transactional
     public User updatePassword(PasswordUserDto dto, int id) {
         User user = loadUserById(id);
-        if (!dto.getPassword().equals(dto.getPasswordConfirm()))
-            throw new PasswordMismatchException("Entered passwords don't match");
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        mapper.map(dto, user);
-        userRepository.save(user);
-        return user;
+        if (user != null) {
+            if (!dto.getPassword().equals(dto.getPasswordConfirm()))
+                throw new PasswordMismatchException("Entered passwords don't match");
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+            mapper.map(dto, user);
+            return userRepository.save(user);
+        } else throw new BadRequestException("User with id " + id + "to update has been not found");
     }
 
     @Transactional

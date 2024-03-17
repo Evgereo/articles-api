@@ -19,7 +19,7 @@ import java.util.*;
 @Slf4j
 public class AuthEntryPoint implements AuthenticationEntryPoint {
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
-    private List<String> methodsInfo;
+    private final List<String> methodsInfo = new ArrayList<>();
 
     private static boolean existsPattern(HttpServletRequest request, String... patterns) {
         return Arrays.stream(patterns).anyMatch(pattern -> request.getRequestURI().equals(pattern));
@@ -36,10 +36,11 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
     }
 
     private boolean isNotEndpointPathExist(HttpServletRequest request) {
+        boolean isNotEndpointPathExist = true;
         Map<RequestMappingInfo, HandlerMethod> handlerMethods = requestMappingHandlerMapping.getHandlerMethods();
         if (AuthEntryPoint.existsPattern(request, "/actuator", "/actuator/prometheus")) {
             AuthEntryPoint.log.debug("Pattern {} exist", request.getRequestURI());
-            methodsInfo = new ArrayList<>(List.of("GET"));
+            methodsInfo.add("GET");
             return false;
         }
         for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethods.entrySet()) {
@@ -48,13 +49,15 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
             if (new AntPathMatcher().match(mappingInfo.getPatternValues().stream().iterator().next(), request.getRequestURI()) &&
                     new HashSet<>(mappingInfo.getParamsCondition().getExpressions().stream().map(NameValueExpression::getName).toList())
                             .containsAll(Collections.list(request.getParameterNames()))) {
-                AuthEntryPoint.log.debug("Pattern {} exist", request.getRequestURI());
-                methodsInfo = mappingInfo.getMethodsCondition().getMethods().stream().map(Enum::name).toList();
-                return false;
+                methodsInfo.addAll(mappingInfo.getMethodsCondition().getMethods().stream().map(Enum::name).toList());
+                isNotEndpointPathExist = false;
             }
         }
-        AuthEntryPoint.log.debug("Pattern {} don't exist", request.getRequestURI());
-        return true;
+        if (isNotEndpointPathExist)
+            AuthEntryPoint.log.debug("Pattern {} don't exist", request.getRequestURI());
+        else
+            AuthEntryPoint.log.debug("Pattern {} exist", request.getRequestURI());
+        return isNotEndpointPathExist;
     }
 
     private boolean isNotMethodExist(HttpServletRequest request) {

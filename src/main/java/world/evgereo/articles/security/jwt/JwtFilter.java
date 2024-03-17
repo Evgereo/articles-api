@@ -1,4 +1,4 @@
-package world.evgereo.articles.security.filters;
+package world.evgereo.articles.security.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -15,7 +15,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import world.evgereo.articles.security.utils.JwtTokenUtils;
 
 import java.io.IOException;
 import java.util.stream.Collectors;

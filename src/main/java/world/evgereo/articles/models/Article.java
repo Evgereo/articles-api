@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -31,4 +33,8 @@ public class Article {
     @JoinColumn(name = "author_id", referencedColumnName = "user_id")
     @JsonManagedReference
     private User author;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "article_id")
+    private List<Comment> comments;
 }

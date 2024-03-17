@@ -11,7 +11,7 @@ import world.evgereo.articles.dtos.AuthResponseDto;
 import world.evgereo.articles.dtos.RefreshRequestDto;
 import world.evgereo.articles.errors.exceptions.AuthException;
 import world.evgereo.articles.models.User;
-import world.evgereo.articles.security.utils.JwtTokenUtils;
+import world.evgereo.articles.security.jwt.JwtTokenUtils;
 
 @Service
 @RequiredArgsConstructor

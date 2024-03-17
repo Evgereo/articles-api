@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import world.evgereo.articles.dtos.CreateCommentDto;
 import world.evgereo.articles.dtos.CreateUpdateArticleDto;
+import world.evgereo.articles.dtos.UpdateCommentDto;
 import world.evgereo.articles.models.Article;
 import world.evgereo.articles.services.ArticleService;
 import world.evgereo.articles.utils.UriPageBuilder;
@@ -62,6 +64,21 @@ public class ArticleController {
     @PatchMapping(value = "/articles/{id}", params = "edit", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Article> editArticle(@RequestBody @Valid CreateUpdateArticleDto article, @PathVariable("id") int id) {
         return new ResponseEntity<>(articleService.updateArticle(article, id), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/articles/{id}", params = "comment", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Article> addComment(@RequestBody @Valid CreateCommentDto comment, @PathVariable("id") int id) {
+        return new ResponseEntity<>(articleService.addComment(comment, id), HttpStatus.OK);
+    }
+
+    @PatchMapping(value = "/articles/{id}", params = "comment", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Article> editComment(@RequestBody @Valid UpdateCommentDto comment, @RequestParam(name = "comment") int commentId) {
+        return new ResponseEntity<>(articleService.updateComment(comment, commentId), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/articles/{id}", params = "comment")
+    public ResponseEntity<Article> deleteComment(@RequestParam(name = "comment") int commentId) {
+        return new ResponseEntity<>(articleService.deleteComment(commentId), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/articles/{id}", params = "delete")

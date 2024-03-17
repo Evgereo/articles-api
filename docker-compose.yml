@@ -5,6 +5,9 @@ services:
     image: postgres:16
     container_name: "postgres"
     restart: always
+    profiles:
+      - debug
+      - deploy
     volumes:
       - pgdata:/var/lib/postgresql/data/
     environment:
@@ -12,14 +15,17 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: articles
     ports:
-      - "1111:5432"
+      - "8001:5432"
 
   redis:
     image: redis:alpine
     container_name: "redis"
     restart: always
+    profiles:
+      - debug
+      - deploy
     ports:
-      - "2222:6379"
+      - "6380:6379"
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
@@ -28,6 +34,8 @@ services:
     build: .
     container_name: "articles"
     restart: always
+    profiles:
+      - deploy
     depends_on:
       - postgres
       - redis
@@ -40,8 +48,6 @@ services:
 
       SPRING_FLYWAY_URL: jdbc:postgresql://postgres:5432/articles
       SPRING_FLYWAY_LOCATIONS: db/migration
-
-      #SPRING_JPA_HIBERNATE_DDL_AUTO: validate
 
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379

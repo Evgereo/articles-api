@@ -5,8 +5,8 @@ spring:
       port: 6379
       time-to-live: 2592000
   datasource:
-    url: jdbc:postgresql://192.168.1.104/articles?stringtype=unspecified&user=postgres&password=root #(for wsl)
-    #jdbc:postgresql://127.0.0.1:5432/articles?stringtype=unspecified&user=postgres&password=root (for windows)
+    #    url: jdbc:postgresql://192.168.1.104/articles?stringtype=unspecified&user=postgres&password=root #(for wsl to windows)
+    url: jdbc:postgresql://127.0.0.1:8001/articles?user=postgres&password=root #(for local)
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: true
@@ -14,11 +14,11 @@ spring:
     hibernate:
       ddl-auto: none
   flyway:
-    url: jdbc:postgresql://192.168.1.104/articles
+    url: jdbc:postgresql://localhost:8001/articles
     user: postgres
     password: root
     enabled: true
-    baseline-on-migrate: true
+    baseline-on-migrate: false
     locations: classpath:db/migration
     driver-class-name: org.postgresql.Driver
   output:

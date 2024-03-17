@@ -1,4 +1,4 @@
-package world.evgereo.articles.security.utils;
+package world.evgereo.articles.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

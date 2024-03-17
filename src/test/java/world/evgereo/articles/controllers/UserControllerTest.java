@@ -13,8 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import world.evgereo.articles.dtos.PasswordUserDto;
 import world.evgereo.articles.dtos.UpdateUserDto;
-import world.evgereo.articles.security.filters.JwtFilter;
-import world.evgereo.articles.security.utils.JwtTokenUtils;
+import world.evgereo.articles.security.jwt.JwtFilter;
+import world.evgereo.articles.security.jwt.JwtTokenUtils;
 import world.evgereo.articles.services.UserService;
 
 import static org.hamcrest.Matchers.hasSize;

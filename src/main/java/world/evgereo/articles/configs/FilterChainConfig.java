@@ -14,7 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import world.evgereo.articles.security.AuthEntryPoint;
-import world.evgereo.articles.security.filters.JwtFilter;
+import world.evgereo.articles.security.jwt.JwtFilter;
 import world.evgereo.articles.security.managers.ArticleAuthorizationManager;
 import world.evgereo.articles.security.managers.UserAuthorizationManager;
 import world.evgereo.articles.services.UserService;

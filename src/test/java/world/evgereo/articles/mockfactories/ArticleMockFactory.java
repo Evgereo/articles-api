@@ -16,7 +16,8 @@ public class ArticleMockFactory {
             "test",
             "first",
             "2000-01-01",
-            getFirstUser()
+            getFirstUser(),
+            null
     );
 
     private static final Article secondArticle = new Article(
@@ -24,7 +25,8 @@ public class ArticleMockFactory {
             "test",
             "second",
             "2000-01-02",
-            getFirstUser()
+            getFirstUser(),
+            null
     );
 
 
