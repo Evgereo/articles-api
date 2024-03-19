@@ -3,4 +3,4 @@ The project is built on Spring Boot and is an interaction between users and arti
 
 To run the api using docker compose, use the command "docker compose --profile deploy up --build" and all the required api containers will be started and configured independently of each other.
 
-P.S don't forget to compile a new jar file (mvn compile)
+P.S don't forget to compile a new jar file (mvn package -DskipTest, tests don't work it ok) and set your variables in the .env file (check .env.example)
