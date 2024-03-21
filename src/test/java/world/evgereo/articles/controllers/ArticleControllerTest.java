@@ -11,7 +11,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import world.evgereo.articles.dtos.CreateCommentDto;
 import world.evgereo.articles.dtos.CreateUpdateArticleDto;
+import world.evgereo.articles.dtos.UpdateCommentDto;
 import world.evgereo.articles.mockfactories.ArticleMockFactory;
 import world.evgereo.articles.services.ArticleService;
 
@@ -74,7 +76,7 @@ class ArticleControllerTest {
     }
 
     @Test
-    void getArticlesOfUser_withNotExistingPage_getArticles() throws Exception {
+    void getArticlesOfUser_withNotExistingPage_getNotFoundStatus() throws Exception {
         when(articleService.getPaginatedArticlesByAuthorId(1, 1000, 10)).thenReturn(ArticleMockFactory.getEmptyPage());
         mockMvc.perform(get("/users/{userId}/articles?page=1000&size=10", 1))
                 .andExpect(status().isNotFound());
@@ -112,6 +114,37 @@ class ArticleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.articleId").value(1));
         verify(articleService, times(1)).updateArticle(any(CreateUpdateArticleDto.class), eq(1));
+    }
+
+    @Test
+    void addComment() throws Exception {
+        when(articleService.createComment(any(CreateCommentDto.class), eq(1))).thenReturn(getFirstArticle());
+        String commentJson = objectMapper.writeValueAsString(getParentCommentDto());
+        mockMvc.perform(post("/articles/{id}?comment", 1)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(commentJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.comments[0].commentId").value(1));
+        verify(articleService, times(1)).createComment(any(CreateCommentDto.class), eq(1));
+    }
+
+    @Test
+    void updateComment() throws Exception {
+        when(articleService.updateComment(any(UpdateCommentDto.class), eq(1))).thenReturn(getFirstArticle());
+        String commentJson = objectMapper.writeValueAsString(getUpdateCommentDto());
+        mockMvc.perform(patch("/articles/{id}?comment=1", 1)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(commentJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.comments[0].commentId").value(1));
+        verify(articleService, times(1)).updateComment(any(UpdateCommentDto.class), eq(1));
+    }
+
+    @Test
+    void deleteComment() throws Exception {
+        mockMvc.perform(delete("/articles/{id}?comment=1", 1))
+                .andExpect(status().isOk());
+        verify(articleService, times(1)).deleteComment(1);
     }
 
     @Test

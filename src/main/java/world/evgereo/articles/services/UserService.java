@@ -47,23 +47,23 @@ public class UserService implements UserDetailsService {
         else throw new NotFoundException("User with id " + id + " not found");
     }
 
+    private User getUserById(int id) {
+        return id != 0 ? userRepository.findById(id).orElse(null) : null;
+    }
+
     public User loadUserByEmail(String email) {
         User user = getUserByEmail(email);
         if (user != null) return user;
         else throw new UsernameNotFoundException("User with " + email + " not found");
     }
 
+    private User getUserByEmail(String email) {
+        return !email.isEmpty() ? userRepository.findUserByEmail(email).orElse(null) : null;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) {
         return loadUserByEmail(email);
-    }
-
-    private User getUserById(int id) {
-        return id != 0 ? userRepository.findById(id).orElse(null) : null;
-    }
-
-    private User getUserByEmail(String email) {
-        return !email.isEmpty() ? userRepository.findUserByEmail(email).orElse(null) : null;
     }
 
     public User createUser(RegistrationUserDto dto) {
@@ -80,7 +80,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public User updateUser(UpdateUserDto dto, int id) {
-        User user = loadUserById(id);
+        User user = getUserById(id);
         if (user != null) {
             mapper.map(dto, user);
             return userRepository.save(user);
@@ -89,12 +89,12 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public User updatePassword(PasswordUserDto dto, int id) {
-        User user = loadUserById(id);
+        User user = getUserById(id);
         if (user != null) {
             if (!dto.getPassword().equals(dto.getPasswordConfirm()))
                 throw new PasswordMismatchException("Entered passwords don't match");
-            user.setPassword(passwordEncoder.encode(dto.getPassword()));
             mapper.map(dto, user);
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
             return userRepository.save(user);
         } else throw new BadRequestException("User with id " + id + "to update has been not found");
     }

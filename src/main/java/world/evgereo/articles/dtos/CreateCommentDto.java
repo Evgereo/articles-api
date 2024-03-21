@@ -18,7 +18,7 @@ public class CreateCommentDto {
     @NotBlank(message = "Comment should be not empty")
     private String content;
 
-    public CreateCommentDto(int userId, String content) {
+    public CreateCommentDto(String content) {
         this(0, 0, content);
     }
 }

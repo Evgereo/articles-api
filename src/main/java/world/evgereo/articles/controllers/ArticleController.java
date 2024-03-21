@@ -68,15 +68,15 @@ public class ArticleController {
 
     @PostMapping(value = "/articles/{id}", params = "comment", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Article> addComment(@RequestBody @Valid CreateCommentDto comment, @PathVariable("id") int id) {
-        return new ResponseEntity<>(articleService.addComment(comment, id), HttpStatus.OK);
+        return new ResponseEntity<>(articleService.createComment(comment, id), HttpStatus.OK);
     }
 
-    @PatchMapping(value = "/articles/{id}", params = "comment", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/articles/*", params = "comment", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Article> editComment(@RequestBody @Valid UpdateCommentDto comment, @RequestParam(name = "comment") int commentId) {
         return new ResponseEntity<>(articleService.updateComment(comment, commentId), HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/articles/{id}", params = "comment")
+    @DeleteMapping(value = "/articles/*", params = "comment")
     public ResponseEntity<Article> deleteComment(@RequestParam(name = "comment") int commentId) {
         return new ResponseEntity<>(articleService.deleteComment(commentId), HttpStatus.OK);
     }

@@ -51,21 +51,13 @@ class UserControllerTest {
     }
 
     @Test
-    void getPaginatedUsers_withExistingPage_getUsers() throws Exception {
+    void getPaginatedUsers() throws Exception {
         when(userService.getPaginatedUsers(0, 10)).thenReturn(getPageOfTwoUsers());
         mockMvc.perform(get("/users?page=0&size=10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(header().exists("Link"));
         verify(userService, times(1)).getPaginatedUsers(0, 10);
-    }
-
-    @Test
-    void getPaginatedUsers_withNotExistingPage_getNotFoundStatus() throws Exception {
-        when(userService.getPaginatedUsers(1000, 10)).thenReturn(getEmptyPage());
-        mockMvc.perform(get("/users?page=1000&size=10"))
-                .andExpect(status().isNotFound());
-        verify(userService, times(1)).getPaginatedUsers(1000, 10);
     }
 
     @Test

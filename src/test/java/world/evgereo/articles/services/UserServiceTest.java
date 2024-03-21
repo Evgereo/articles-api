@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import world.evgereo.articles.errors.exceptions.BadRequestException;
 import world.evgereo.articles.errors.exceptions.DuplicateUserException;
 import world.evgereo.articles.errors.exceptions.NotFoundException;
 import world.evgereo.articles.errors.exceptions.PasswordMismatchException;
@@ -14,6 +15,7 @@ import world.evgereo.articles.models.User;
 import world.evgereo.articles.repositories.UserRepository;
 import world.evgereo.articles.utils.MapperUtils;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -63,9 +65,21 @@ class UserServiceTest {
     }
 
     @Test
+    void loadUserByUsername_withExistingEmail_getUser() {
+        loadUserByEmail_withExistingEmail_getUser();
+    }
+
+    @Test
+    void loadUserByUsername_withNotExistingEmail_throwsException() {
+        loadUserByEmail_withNotExistingEmail_throwsException();
+    }
+
+    @Test
     void createUser_withCorrectData_getUser() {
         when(userRepository.findUserByEmail(any(String.class))).thenReturn(Optional.empty());
-        userService.createUser(getValidRegistrationUserDto());
+        when(userRepository.save(any(User.class))).thenReturn(getFirstUser());
+        assertEquals(getFirstUser(), userService.createUser(getValidRegistrationUserDto()));
+        verify(userRepository, times(1)).findUserByEmail(any(String.class));
         verify(userRepository, times(1)).save(any(User.class));
     }
 
@@ -84,23 +98,44 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUser_getUser() {
+    void updateUser_withExistingId_getUser() {
         when(userRepository.findById(1)).thenReturn(Optional.ofNullable(getFirstUser()));
+        when(userRepository.save(any(User.class))).thenReturn(getFirstUser());
         assertEquals(getFirstUser(), userService.updateUser(getUpdateUserDto(), 1));
+        verify(userRepository, times(1)).findById(1);
         verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
-    void updatePassword_withCorrectPassword_getUser() {
+    void updateUser_withNotExistingId_getUser() {
+        when(userRepository.findById(5)).thenReturn(Optional.empty());
+        assertThrows(BadRequestException.class, () -> userService.updateUser(getUpdateUserDto(), 5));
+        verify(userRepository, times(1)).findById(5);
+        verify(userRepository, times(0)).save(any(User.class));
+    }
+
+    @Test
+    void updatePassword_withCorrectData_getUser() {
         when(userRepository.findById(1)).thenReturn(Optional.ofNullable(getFirstUser()));
-        userService.updatePassword(getValidPasswordUserDto(), 1);
+        when(userRepository.save(any(User.class))).thenReturn(getFirstUser());
+        assertEquals(getFirstUser(), userService.updatePassword(getValidPasswordUserDto(), 1));
+        verify(userRepository, times(1)).findById(1);
         verify(userRepository, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void updatePassword_withNotExistingId_throwsBadRequestException() {
+        when(userRepository.findById(5)).thenReturn(Optional.empty());
+        assertThrows(BadRequestException.class, () -> userService.updatePassword(getValidPasswordUserDto(), 5));
+        verify(userRepository, times(1)).findById(5);
+        verify(userRepository, times(0)).save(any(User.class));
     }
 
     @Test
     void updatePassword_withMismatchPassword_throwsPasswordMismatchException() {
         when(userRepository.findById(1)).thenReturn(Optional.ofNullable(getFirstUser()));
         assertThrows(PasswordMismatchException.class, () -> userService.updatePassword(getInvalidPasswordUserDto(), 1));
+        verify(userRepository, times(1)).findById(1);
         verify(userRepository, times(0)).save(any(User.class));
     }
 
@@ -108,7 +143,7 @@ class UserServiceTest {
     void deleteUser() {
         when(userRepository.findById(1)).thenReturn(Optional.ofNullable(getFirstUser()));
         userService.deleteUser(1);
-        verify(jwtTokenService, times(1)).deleteToken("testfirst@gmail.com");
+        verify(jwtTokenService, times(1)).deleteToken(Objects.requireNonNull(getFirstUser()).getEmail());
         verify(userRepository, times(1)).updateArticlesUserToNull(1);
         verify(userRepository, times(1)).deleteById(1);
     }

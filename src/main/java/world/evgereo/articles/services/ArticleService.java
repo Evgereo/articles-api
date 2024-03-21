@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import world.evgereo.articles.dtos.CreateCommentDto;
 import world.evgereo.articles.dtos.CreateUpdateArticleDto;
@@ -49,19 +50,24 @@ public class ArticleService {
         return id != 0 ? articleRepository.findById(id).orElse(null) : null;
     }
 
+    public Article createArticle(CreateUpdateArticleDto createArticle) {
+        Article article = new Article();
+        String authorEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            article.setAuthor(userService.loadUserByEmail(authorEmail));
+        } catch (UsernameNotFoundException ex) {
+            throw new BadRequestException("User with email " + authorEmail + "to update has been not found");
+        }
+        mapper.map(createArticle, article);
+        return articleRepository.save(article);
+    }
+
     public Article updateArticle(CreateUpdateArticleDto updateArticle, int id) {
         Article article = getArticle(id);
         if (article != null) {
             mapper.map(updateArticle, article);
             return articleRepository.save(article);
         } else throw new BadRequestException("Article with id " + id + " to update not found");
-    }
-
-    public Article createArticle(CreateUpdateArticleDto createArticle) {
-        Article article = new Article();
-        article.setAuthor(userService.loadUserByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
-        mapper.map(createArticle, article);
-        return articleRepository.save(article);
     }
 
     public void deleteArticle(int id) {
@@ -79,7 +85,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article addComment(CreateCommentDto createComment, int articleId) {
+    public Article createComment(CreateCommentDto createComment, int articleId) {
         try {
             loadArticleById(articleId);
         } catch (NotFoundException ex) {
@@ -94,14 +100,21 @@ public class ArticleService {
                 throw new BadRequestException("Parent comment with id " + createComment.getParentId() + " not found");
             }
         }
-        if (createComment.getToUserId() != 0) try {
-            userService.loadUserById(createComment.getToUserId());
-        } catch (NotFoundException ex) {
-            throw new BadRequestException("User with id " + createComment.getToUserId() + " to whom you are replying not found");
+        if (createComment.getToUserId() != 0) {
+            try {
+                userService.loadUserById(createComment.getToUserId());
+            } catch (NotFoundException ex) {
+                throw new BadRequestException("User with id " + createComment.getToUserId() + " to whom you are replying not found");
+            }
         }
         Comment comment = new Comment();
         comment.setArticleId(articleId);
-        comment.setAuthor(userService.loadUserByEmail((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal()));
+        String authorEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            comment.setAuthor(userService.loadUserByEmail(authorEmail));
+        } catch (UsernameNotFoundException ex) {
+            throw new BadRequestException("User with email " + authorEmail + "to update has been not found");
+        }
         mapper.map(createComment, comment);
         commentRepository.save(comment);
         return loadArticleById(articleId);
@@ -111,11 +124,6 @@ public class ArticleService {
     public Article updateComment(UpdateCommentDto updateComment, int commentId) {
         Comment comment = getComment(commentId);
         if (comment != null) {
-            try {
-                loadArticleById(comment.getArticleId());
-            } catch (NotFoundException ex) {
-                throw new BadRequestException("Article with id " + comment.getArticleId() + " to add comment not found");
-            }
             mapper.map(updateComment, comment);
             commentRepository.save(comment);
             return loadArticleById(comment.getArticleId());
