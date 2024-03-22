@@ -33,7 +33,7 @@ public class ArticleService {
     }
 
     public Page<Article> getPaginatedArticles(int page, int size) {
-        return articleRepository.findAll(PageRequest.of(page, size));
+        return articleRepository.findAllArticles(PageRequest.of(page, size));
     }
 
     public Page<Article> getPaginatedArticlesByAuthorId(int authorId, int page, int size) {
@@ -91,21 +91,16 @@ public class ArticleService {
         } catch (NotFoundException ex) {
             throw new BadRequestException("Article with id " + articleId + " to add comment not found");
         }
-        if (createComment.getParentId() != 0) {
-            try {
-                if (loadCommentById(createComment.getParentId()).getParentId() != 0) {
-                    throw new BadRequestException("Parent comment with id " + createComment.getParentId() + " can't be parent");
-                }
-            } catch (NotFoundException ex) {
-                throw new BadRequestException("Parent comment with id " + createComment.getParentId() + " not found");
-            }
+        if (createComment.getParentId() != 0) try {
+            if (loadCommentById(createComment.getParentId()).getParentId() != 0)
+                throw new BadRequestException("Parent comment with id " + createComment.getParentId() + " can't be parent");
+        } catch (NotFoundException ex) {
+            throw new BadRequestException("Parent comment with id " + createComment.getParentId() + " not found");
         }
-        if (createComment.getToUserId() != 0) {
-            try {
-                userService.loadUserById(createComment.getToUserId());
-            } catch (NotFoundException ex) {
-                throw new BadRequestException("User with id " + createComment.getToUserId() + " to whom you are replying not found");
-            }
+        if (createComment.getToUserId() != 0) try {
+            userService.loadUserById(createComment.getToUserId());
+        } catch (NotFoundException ex) {
+            throw new BadRequestException("User with id " + createComment.getToUserId() + " to whom you are replying not found");
         }
         Comment comment = new Comment();
         comment.setArticleId(articleId);

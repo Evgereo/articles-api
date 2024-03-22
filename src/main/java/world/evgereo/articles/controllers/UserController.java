@@ -34,8 +34,8 @@ public class UserController {
     }
 
     @GetMapping(params = {"page", "size"})
-    public ResponseEntity<List<User>> getPaginatedUsers(@RequestParam(defaultValue = "0") int page,
-                                                        @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<List<User>> getPaginatedUsers(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                                                        @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
         Page<User> paginatedUsers = userService.getPaginatedUsers(page, size);
         if (paginatedUsers.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(paginatedUsers.getContent(), new UriPageBuilder(paginatedUsers).getAllPagesUri(), HttpStatus.OK);

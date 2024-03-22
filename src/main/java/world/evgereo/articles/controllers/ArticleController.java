@@ -35,8 +35,8 @@ public class ArticleController {
     }
 
     @GetMapping(value = "/articles", params = {"page", "size"})
-    public ResponseEntity<List<Article>> getPaginatedArticles(@RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<List<Article>> getPaginatedArticles(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                                                              @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
         Page<Article> paginatedArticles = articleService.getPaginatedArticles(page, size);
         if (paginatedArticles.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(paginatedArticles.getContent(), new UriPageBuilder(paginatedArticles).getAllPagesUri(), HttpStatus.OK);
@@ -44,8 +44,8 @@ public class ArticleController {
 
     @GetMapping(value = "/users/{userId}/articles", params = {"page", "size"})
     public ResponseEntity<List<Article>> getArticlesOfUser(@PathVariable("userId") int id,
-                                                           @RequestParam(defaultValue = "0") int page,
-                                                           @RequestParam(defaultValue = "10") int size) {
+                                                           @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                                                           @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
         Page<Article> paginatedArticles = articleService.getPaginatedArticlesByAuthorId(id, page, size);
         if (paginatedArticles.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(paginatedArticles.getContent(), new UriPageBuilder(paginatedArticles).getAllPagesUri(), HttpStatus.OK);

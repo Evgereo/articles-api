@@ -1,4 +1,6 @@
 spring:
+  mvc:
+    log-resolved-exception: false
   data:
     redis:
       host: ${LOCAL_REDIS_HOST}
