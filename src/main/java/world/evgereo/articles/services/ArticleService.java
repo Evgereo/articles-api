@@ -69,7 +69,7 @@ public class ArticleService {
             return articleRepository.save(article);
         } else throw new BadRequestException("Article with id " + id + " to update not found");
     }
-
+    
     public void deleteArticle(int id) {
         articleRepository.deleteById(id);
     }

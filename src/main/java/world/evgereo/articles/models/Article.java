@@ -35,6 +35,6 @@ public class Article {
     private User author;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "article_id")
+    @JoinColumn(name = "article_id", updatable = false)
     private List<Comment> comments;
 }
